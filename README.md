@@ -28,7 +28,7 @@ const handleMouseEnter = (e) => {
 element.addEventListener("mouseenter", handleMouseEnter, false);
 ```
 
-### Determine if FocusEvent was caused by `key` input for accessibility
+### Determine if a FocusEvent was caused by `key` input for accessibility
 
 ```js
 import { eventFrom } from "event-from";

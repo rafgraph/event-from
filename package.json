@@ -2,7 +2,7 @@
   "name": "event-from",
   "version": "0.0.0",
   "description": "Determine if an event was caused by mouse, touch or key input.",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
