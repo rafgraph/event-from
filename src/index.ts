@@ -12,6 +12,21 @@ let recentWindowFocus = false;
 // so wait extra long for mouse events after touch input before attributing them to mouse input
 const recentTouchEventTimerMultiple = deviceType === 'touchOnly' ? 3 : 1;
 
+// To determine if there was a recentTouch event
+// use setTimeout instead of a Date.now() comparison because
+// in the case of a long running/blocking process from a touch event,
+// the browser will push the corresponding mouse event onto the callback queue at the time it should be executed,
+// and then push the timeout function onto the queue after the timer expires,
+// even if the the main thread is still blocked (because the browser is multi-threaded).
+// This results in the mouse event being moved to the callstack and called
+// before the timeout function so recentTouch is still true
+// regardless of how many Date.now() seconds have gone by.
+// Also, if subsequent touch events occur while the blocking process is running,
+// the browser will push the touch events onto the queue when the touch happens,
+// and if one of them is in queue before the previous touch event's timer expires,
+// it will be called before the timeout's function (so it can reset the timer),
+// and, this is the key part, if the previous timer has already finished, the call to `clearTimeout(recentTouchTimeoutId)`
+// will remove the timeout's function from the callback queue.
 let recentTouchTimeoutId: number | undefined;
 const setRecentTouchTimeout = (delay: number) => {
   if (recentTouchTimeoutId !== undefined) {
@@ -22,7 +37,6 @@ const setRecentTouchTimeout = (delay: number) => {
     recentTouchTimeoutId = undefined;
   }, delay * recentTouchEventTimerMultiple);
 };
-
 const setRecentTouch = (delay: number) => () => {
   recentTouch = true;
   recentEventFrom = 'touch';
