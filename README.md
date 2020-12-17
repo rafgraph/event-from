@@ -93,6 +93,6 @@ element.addEventListener('click', handleClickEvent, false);
 
 ## How it works
 
-Event From sets passive event listeners on the `document` and `window` and tracks the recent event history to know what input type is responsible for the event that's passed to `eventFrom(event)`.
+Event From sets passive capture phase event listeners on the `document` and `window` and tracks the recent event history to know what input type is responsible for the event that's passed to `eventFrom(event)`.
 
 The listeners that Event From sets are all low frequency event listeners (enter/leave/down/up/focus/etc). Event From does not set any high frequency listeners such as `move` or `scroll` listeners.

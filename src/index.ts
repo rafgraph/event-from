@@ -7,11 +7,6 @@ let recentTouch = false;
 let recentFocusFrom: EventFrom = recentEventFrom;
 let recentWindowFocus = false;
 
-// if detect-it believes the deviceType is touchOnly then it is
-// highly unlikely that there is a mouse (but not impossible),
-// so wait extra long for mouse events after touch input before attributing them to mouse input
-const recentTouchEventTimerMultiple = deviceType === 'touchOnly' ? 3 : 1;
-
 // To determine if there was a recentTouch event
 // use setTimeout instead of a Date.now() comparison because
 // in the case of a long running/blocking process from a touch event,
@@ -29,20 +24,27 @@ const recentTouchEventTimerMultiple = deviceType === 'touchOnly' ? 3 : 1;
 // and, this is the key part, if the previous timer has finished and it's callback is added to the queue,
 // the call to clearTimeout(recentTouchTimeoutId) will remove the timeout's function from the callback queue.
 let recentTouchTimeoutId: number | undefined;
-const setRecentTouchTimeout = (delay: number) => {
+const setRecentEventFromTouch = (touchDelay: number) => {
+  recentTouch = true;
+  recentEventFrom = 'touch';
+
   if (recentTouchTimeoutId !== undefined) {
     window.clearTimeout(recentTouchTimeoutId);
   }
-  recentTouchTimeoutId = window.setTimeout(() => {
-    recentTouch = false;
-    recentTouchTimeoutId = undefined;
-  }, delay * recentTouchEventTimerMultiple);
+  recentTouchTimeoutId = window.setTimeout(
+    () => {
+      recentTouch = false;
+      recentTouchTimeoutId = undefined;
+    },
+    // if detect-it believes the deviceType is touchOnly
+    // then it is highly unlikely that there is a mouse (but not impossible),
+    // so wait 3*delay for mouse events after touch input before attributing them to mouse input
+    touchDelay * (deviceType === 'touchOnly' ? 3 : 1),
+  );
 };
-const setRecentTouch = (delay: number) => () => {
-  recentTouch = true;
-  recentEventFrom = 'touch';
-  setRecentTouchTimeout(delay);
-};
+
+const handleTouchEvent = (touchDelay: number) => () =>
+  setRecentEventFromTouch(touchDelay);
 
 const handlePointerEvent = (touchDelay: number) => (e: PointerEvent) => {
   switch (e.pointerType) {
@@ -51,7 +53,7 @@ const handlePointerEvent = (touchDelay: number) => (e: PointerEvent) => {
       break;
     case 'pen':
     case 'touch':
-      setRecentTouch(touchDelay)();
+      setRecentEventFromTouch(touchDelay);
       break;
   }
 };
@@ -65,12 +67,13 @@ const handleKeyEvent = () => {
   recentEventFrom = 'key';
 };
 
-const handleDocumentFocusEvent = () => {
-  if (!recentWindowFocus) {
-    recentFocusFrom = recentEventFrom;
-  }
-};
-
+// recentFocusFrom tracking
+// set document focus event capture listener which sets recentFocusFrom equal to recentEventFrom
+// except if there is a recent window focus event where the window is the target,
+// in which case leave recentFocusFrom unchanged to maintain correct recentFocusFrom after switching apps/windows/tabs/etc,
+// if/when the focus event is passed into eventFrom later in the cycle, just return recentFocusFrom.
+// for tracking recent window focus, set window focus capture event listener,
+// if the target is window (or document on firefox), then track recentWindowFocus with setTimeout 300
 let recentWindowFocusTimeoutId: number | undefined;
 const setRecentWindowFocusTimeout = () => {
   if (recentWindowFocusTimeoutId !== undefined) {
@@ -82,14 +85,27 @@ const setRecentWindowFocusTimeout = () => {
   }, 300);
 };
 
+const handleWindowFocusEvent = (e: FocusEvent) => {
+  if (e.target === window || e.target === document) {
+    recentWindowFocus = true;
+    setRecentWindowFocusTimeout();
+  }
+};
+
+const handleDocumentFocusEvent = () => {
+  if (!recentWindowFocus) {
+    recentFocusFrom = recentEventFrom;
+  }
+};
+
 const listenerOptions = supportsPassiveEvents
   ? { capture: true, passive: true }
   : true;
 
 const documentListeners = [
-  ['touchstart', setRecentTouch(750)],
-  ['touchend', setRecentTouch(300)],
-  ['touchcancel', setRecentTouch(300)],
+  ['touchstart', handleTouchEvent(750)],
+  ['touchend', handleTouchEvent(300)],
+  ['touchcancel', handleTouchEvent(300)],
   ['pointerover', handlePointerEvent(300)],
   ['pointerenter', handlePointerEvent(300)],
   ['pointerdown', handlePointerEvent(750)],
@@ -112,16 +128,7 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     document.addEventListener(eventName, eventHandler, listenerOptions);
   });
 
-  window.addEventListener(
-    'focus',
-    (e) => {
-      if (e.target === window || e.target === document) {
-        recentWindowFocus = true;
-        setRecentWindowFocusTimeout();
-      }
-    },
-    listenerOptions,
-  );
+  window.addEventListener('focus', handleWindowFocusEvent, listenerOptions);
 }
 
 interface EventFromFunction {
@@ -144,10 +151,10 @@ export const eventFrom: EventFromFunction = (event) => {
     case 'pen':
     case 'touch':
       if (!recentTouch) {
-        setRecentTouchTimeout(300);
-        recentTouch = true;
+        setRecentEventFromTouch(300);
+      } else {
+        recentEventFrom = 'touch';
       }
-      recentEventFrom = 'touch';
       break;
   }
 
@@ -157,10 +164,10 @@ export const eventFrom: EventFromFunction = (event) => {
 
   if (/touch/.test(event.type)) {
     if (!recentTouch) {
-      setRecentTouchTimeout(300);
-      recentTouch = true;
+      setRecentEventFromTouch(300);
+    } else {
+      recentEventFrom = 'touch';
     }
-    recentEventFrom = 'touch';
   }
 
   if (/focus/.test(event.type)) {
