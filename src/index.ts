@@ -4,6 +4,8 @@ export type EventFrom = 'mouse' | 'touch' | 'key';
 
 let recentEventFrom: EventFrom = primaryInput;
 let recentTouch = false;
+let recentFocusFrom: EventFrom = recentEventFrom;
+let recentWindowFocus = false;
 
 // if detect-it believes the deviceType is touchOnly then it is
 // highly unlikely that there is a mouse (but not impossible),
@@ -11,7 +13,6 @@ let recentTouch = false;
 const recentTouchEventTimerMultiple = deviceType === 'touchOnly' ? 3 : 1;
 
 let recentTouchTimeoutId: number | undefined;
-
 const setRecentTouchTimeout = (delay: number) => {
   if (recentTouchTimeoutId !== undefined) {
     window.clearTimeout(recentTouchTimeoutId);
@@ -49,6 +50,27 @@ const handleKeyEvent = () => {
   recentEventFrom = 'key';
 };
 
+const handleDocumentFocusEvent = () => {
+  if (!recentWindowFocus) {
+    recentFocusFrom = recentEventFrom;
+  }
+};
+
+let recentWindowFocusTimeoutId: number | undefined;
+const setRecentWindowFocusTimeout = () => {
+  if (recentWindowFocusTimeoutId !== undefined) {
+    window.clearTimeout(recentWindowFocusTimeoutId);
+  }
+  recentWindowFocusTimeoutId = window.setTimeout(() => {
+    recentWindowFocus = false;
+    recentWindowFocusTimeoutId = undefined;
+  }, 300);
+};
+
+const listenerOptions = supportsPassiveEvents
+  ? { capture: true, passive: true }
+  : true;
+
 const documentListeners = [
   ['touchstart', setRecentTouch(750)],
   ['touchend', setRecentTouch(300)],
@@ -65,11 +87,8 @@ const documentListeners = [
   ['mouseup', handleMouseEvent],
   ['keydown', handleKeyEvent],
   ['keyup', handleKeyEvent],
+  ['focus', handleDocumentFocusEvent],
 ];
-
-const listenerOptions = supportsPassiveEvents
-  ? { capture: true, passive: true }
-  : true;
 
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   documentListeners.forEach(([eventName, eventHandler]) => {
@@ -77,6 +96,17 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     // @ts-ignore not sure how to get TS to match the handler type to the specific eventName
     document.addEventListener(eventName, eventHandler, listenerOptions);
   });
+
+  window.addEventListener(
+    'focus',
+    (e) => {
+      if (e.target === window || e.target === document) {
+        recentWindowFocus = true;
+        setRecentWindowFocusTimeout();
+      }
+    },
+    listenerOptions,
+  );
 }
 
 interface EventFromFunction {
@@ -116,6 +146,10 @@ export const eventFrom: EventFromFunction = (event) => {
       recentTouch = true;
     }
     recentEventFrom = 'touch';
+  }
+
+  if (/focus/.test(event.type)) {
+    return recentFocusFrom;
   }
 
   return recentEventFrom;
