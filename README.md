@@ -20,7 +20,7 @@ import { eventFrom } from 'event-from';
 const handleEvent = (event) => {
   // event is any user generated DOM Event
   // call eventFrom in the event handler
-  eventFrom(event); // 'mouse' | 'touch' | 'key'
+  eventFrom(event); // returns 'mouse' | 'touch' | 'key'
 };
 ```
 
