@@ -29,7 +29,7 @@
   "bugs": {
     "url": "https://github.com/rafgraph/event-from/issues"
   },
-  "homepage": "https://github.com/rafgraph/event-from#readme",
+  "homepage": "https://event-from.rafgraph.dev",
   "dependencies": {
     "detect-it": "^4.0.0"
   },

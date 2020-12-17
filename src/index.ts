@@ -15,7 +15,8 @@ const recentTouchEventTimerMultiple = deviceType === 'touchOnly' ? 3 : 1;
 // To determine if there was a recentTouch event
 // use setTimeout instead of a Date.now() comparison because
 // in the case of a long running/blocking process from a touch event,
-// the browser will push the corresponding mouse event onto the callback queue at the time it should be executed,
+// the browser will push the corresponding mouse event (created by the touch interaction)
+// onto the callback queue at the time it should be executed,
 // and then push the timeout function onto the queue after the timer expires,
 // even if the the main thread is still blocked (because the browser is multi-threaded).
 // This results in the mouse event being moved to the callstack and called
@@ -25,8 +26,8 @@ const recentTouchEventTimerMultiple = deviceType === 'touchOnly' ? 3 : 1;
 // the browser will push the touch events onto the queue when the touch happens,
 // and if one of them is in queue before the previous touch event's timer expires,
 // it will be called before the timeout's function (so it can reset the timer),
-// and, this is the key part, if the previous timer has already finished, the call to `clearTimeout(recentTouchTimeoutId)`
-// will remove the timeout's function from the callback queue.
+// and, this is the key part, if the previous timer has finished and it's callback is added to the queue,
+// the call to clearTimeout(recentTouchTimeoutId) will remove the timeout's function from the callback queue.
 let recentTouchTimeoutId: number | undefined;
 const setRecentTouchTimeout = (delay: number) => {
   if (recentTouchTimeoutId !== undefined) {
@@ -135,7 +136,7 @@ export const eventFrom: EventFromFunction = (event) => {
   // use the incoming event to help determine recentEventFrom
   // in the same manner as the document event listeners
   // this helps catch edge cases especially when a move event is passed to eventFrom
-  // because move event listeners are not set on the document
+  // because move event listeners are not set by Event From
   switch (event.pointerType) {
     case 'mouse':
       recentEventFrom = 'mouse';
