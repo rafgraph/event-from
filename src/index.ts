@@ -28,13 +28,10 @@ const setRecentEventFromTouch = (touchDelay: number) => {
   recentTouch = true;
   recentEventFrom = 'touch';
 
-  if (recentTouchTimeoutId !== undefined) {
-    window.clearTimeout(recentTouchTimeoutId);
-  }
+  window.clearTimeout(recentTouchTimeoutId);
   recentTouchTimeoutId = window.setTimeout(
     () => {
       recentTouch = false;
-      recentTouchTimeoutId = undefined;
     },
     // if detect-it believes the deviceType is touchOnly
     // then it is highly unlikely that there is a mouse (but not impossible),
@@ -75,20 +72,14 @@ const handleKeyEvent = () => {
 // for tracking recent window focus, set window focus capture event listener,
 // if the target is window (or document on firefox), then track recentWindowFocus with setTimeout 300
 let recentWindowFocusTimeoutId: number | undefined;
-const setRecentWindowFocusTimeout = () => {
-  if (recentWindowFocusTimeoutId !== undefined) {
-    window.clearTimeout(recentWindowFocusTimeoutId);
-  }
-  recentWindowFocusTimeoutId = window.setTimeout(() => {
-    recentWindowFocus = false;
-    recentWindowFocusTimeoutId = undefined;
-  }, 300);
-};
-
 const handleWindowFocusEvent = (e: FocusEvent) => {
   if (e.target === window || e.target === document) {
     recentWindowFocus = true;
-    setRecentWindowFocusTimeout();
+
+    window.clearTimeout(recentWindowFocusTimeoutId);
+    recentWindowFocusTimeoutId = window.setTimeout(() => {
+      recentWindowFocus = false;
+    }, 300);
   }
 };
 
@@ -106,15 +97,18 @@ const documentListeners = [
   ['touchstart', handleTouchEvent(750)],
   ['touchend', handleTouchEvent(300)],
   ['touchcancel', handleTouchEvent(300)],
-  ['pointerover', handlePointerEvent(300)],
   ['pointerenter', handlePointerEvent(300)],
-  ['pointerdown', handlePointerEvent(750)],
+  ['pointerover', handlePointerEvent(300)],
   ['pointerout', handlePointerEvent(300)],
   ['pointerleave', handlePointerEvent(300)],
+  ['pointerdown', handlePointerEvent(750)],
   ['pointerup', handlePointerEvent(300)],
+  ['pointercancel', handlePointerEvent(300)],
   ['mouseenter', handleMouseEvent],
-  ['mousedown', handleMouseEvent],
+  ['mouseover', handleMouseEvent],
+  ['mouseout', handleMouseEvent],
   ['mouseleave', handleMouseEvent],
+  ['mousedown', handleMouseEvent],
   ['mouseup', handleMouseEvent],
   ['keydown', handleKeyEvent],
   ['keyup', handleKeyEvent],
@@ -170,6 +164,7 @@ export const eventFrom: EventFromFunction = (event) => {
     }
   }
 
+  // focus events return recentFocusFrom, see recentFocusFrom tracking note above
   if (/focus/.test(event.type)) {
     return recentFocusFrom;
   }
