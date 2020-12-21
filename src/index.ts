@@ -56,8 +56,9 @@ const handlePointerEvent = (touchDelay: number) => (e: PointerEvent) => {
 };
 
 const handleMouseEvent = () => {
-  if (recentTouch) return;
-  recentEventFrom = 'mouse';
+  if (!recentTouch) {
+    recentEventFrom = 'mouse';
+  }
 };
 
 const handleKeyEvent = () => {
