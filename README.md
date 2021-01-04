@@ -24,7 +24,7 @@ npm install --save event-from
 import { eventFrom } from 'event-from';
 
 const handleEvent = (event) => {
-  // in the event handler call eventFrom and pass in the event
+  // call eventFrom in the event handler and pass in the event
   // eventFrom will return 1 of 3 strings: 'mouse' | 'touch' | 'key'
   eventFrom(event);
 };
@@ -87,6 +87,34 @@ const handleClickEvent = (e) => {
 };
 
 element.addEventListener('click', handleClickEvent, false);
+```
+
+---
+
+## `setEventFrom(value)`
+
+`value: 'mouse' | 'touch' | 'key'`
+
+Temporarily set the return value for `eventFrom(e)`. This is useful when manually generating events, for example calling `el.focus()` or `el.click()`, and you want `eventFrom(e)` to treat that event as occurring from a specific input.
+
+```js
+import { eventFrom, setEventFrom } from 'event-from';
+
+const handleFocusEvent = (e) => {
+  if (eventFrom(e) === 'key') {
+    // set focus styles when focus is from keyboard input
+  }
+};
+
+const element = document.getElementById('focus-example');
+
+element.addEventListener('focus', handleFocusEvent, false);
+
+// some where in your code where you want to call focus on the element
+// and have it be treated as an event from 'key' input
+setEventFrom('key');
+// now the call to eventFrom(e) in handleFocusEvent will return 'key'
+element.focus();
 ```
 
 ---

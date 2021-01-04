@@ -126,6 +126,15 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   window.addEventListener('focus', handleWindowFocusEvent, listenerOptions);
 }
 
+// temporarily set the return value for eventFrom(e)
+// note that the eventFrom(e) value will change when new events come in
+// useful when manually generating events, e.g. el.focus() or el.click()
+// and you want eventFrom(e) to treat that event as occurring from a specific input
+export const setEventFrom = (value: EventFrom): void => {
+  recentEventFrom = value;
+  recentFocusFrom = value;
+};
+
 interface EventFromFunction {
   (
     // use any instead of unknown b/c unknown causes type error when passing a react synthetic event
