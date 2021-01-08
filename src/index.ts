@@ -121,8 +121,17 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
 // useful when manually generating events, e.g. el.focus() or el.click()
 // and you want eventFrom(e) to treat that event as occurring from a specific input
 export const setEventFrom = (value: EventFrom): void => {
-  recentEventFrom = value;
-  recentFocusFrom = value;
+  if (process.env.NODE_ENV !== 'production') {
+    if (value !== 'mouse' && value !== 'touch' && value !== 'key') {
+      throw Error(
+        `setEventFrom function requires argument of "mouse" | "touch" | "key", argument received: ${value}`,
+      );
+    }
+  }
+  if (value === 'mouse' || value === 'touch' || value === 'key') {
+    recentEventFrom = value;
+    recentFocusFrom = value;
+  }
 };
 
 interface EventFromFunction {
