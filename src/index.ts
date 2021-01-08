@@ -1,8 +1,6 @@
-import { deviceType, primaryInput, supportsPassiveEvents } from 'detect-it';
-
 export type EventFrom = 'mouse' | 'touch' | 'key';
 
-let recentEventFrom: EventFrom = primaryInput;
+let recentEventFrom: EventFrom = 'key';
 let recentTouch = false;
 let recentFocusFrom: EventFrom = recentEventFrom;
 let recentWindowFocus = false;
@@ -29,15 +27,9 @@ const setRecentEventFromTouch = (touchDelay: number) => {
   recentEventFrom = 'touch';
 
   window.clearTimeout(recentTouchTimeoutId);
-  recentTouchTimeoutId = window.setTimeout(
-    () => {
-      recentTouch = false;
-    },
-    // if detect-it believes the deviceType is touchOnly
-    // then it is highly unlikely that there is a mouse (but not impossible),
-    // so wait 3*delay for mouse events after touch input before attributing them to mouse input
-    touchDelay * (deviceType === 'touchOnly' ? 3 : 1),
-  );
+  recentTouchTimeoutId = window.setTimeout(() => {
+    recentTouch = false;
+  }, touchDelay);
 };
 
 const handleTouchEvent = (touchDelay: number) => () =>
@@ -90,9 +82,7 @@ const handleDocumentFocusEvent = () => {
   }
 };
 
-const listenerOptions = supportsPassiveEvents
-  ? { capture: true, passive: true }
-  : true;
+const listenerOptions = { capture: true, passive: true };
 
 const documentListeners = [
   ['touchstart', handleTouchEvent(750)],
