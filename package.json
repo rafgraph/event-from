@@ -7,7 +7,6 @@
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "dev": "npm link && npm run watch && npm unlink -g",
     "build": "rollpkg build",
     "watch": "rollpkg watch",
     "prepublishOnly": "npm run lint && npm test && npm run build",
@@ -31,10 +30,10 @@
   },
   "homepage": "https://event-from.rafgraph.dev",
   "devDependencies": {
-    "lint-staged": "^10.5.3",
+    "lint-staged": "^10.5.4",
     "pre-commit": "^1.2.2",
-    "rollpkg": "^0.2.1",
-    "typescript": "^4.1.3"
+    "rollpkg": "^0.4.2",
+    "typescript": "^4.1.5"
   },
   "pre-commit": "lintStaged",
   "lint-staged": {
