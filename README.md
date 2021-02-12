@@ -1,18 +1,17 @@
 # Event From
 
+[![npm bundle size (version)](https://img.shields.io/bundlephobia/minzip/event-from?color=purple)](https://bundlephobia.com/result?p=event-from) ![npm type definitions](https://img.shields.io/npm/types/event-from?color=blue)
+
 Determine if a browser event was caused by `mouse`, `touch`, or `key` input. Can be used to:
 
 - Ignore `mouse` events caused by `touch` input.
 - Determine if `focus` was initiated from the keyboard (to know when to add focus styles).
 - Determining if a `click` event was from `mouse`, `touch`, or `key` input.
 - And anything else where knowing the type of user interaction that generated the event is helpful.
-- You may also be interested in [Detect It](https://github.com/rafgraph/detect-it), which detects if a device is `mouseOnly`, `touchOnly`, or `hybrid`, and if the primary input is `mouse` or `touch`.
-
-[![npm bundle size (version)](https://img.shields.io/bundlephobia/minzip/event-from?color=purple)](https://bundlephobia.com/result?p=event-from) ![npm type definitions](https://img.shields.io/npm/types/event-from?color=blue)
 
 ---
 
-[Demo website](https://event-from.rafgraph.dev) (code in the [demo repo](https://github.com/rafgraph/event-from-demo))
+**[Live demo app](https://event-from.rafgraph.dev)**, code in the `/demo` folder
 
 ---
 
@@ -51,14 +50,14 @@ element.addEventListener('mouseenter', handleMouseEvent, false);
 
 ---
 
-### Determine if a `focus` event was from `key` input for accessibility
+### Determine if a `focus` event was from `key` input to add focus styles
 
 ```js
 import { eventFrom } from 'event-from';
 
 const handleFocusEvent = (e) => {
   if (eventFrom(e) === 'key') {
-    // set focus styles when focus is from keyboard input
+    // add focus styles when focus is from keyboard input
   }
 };
 
@@ -102,7 +101,7 @@ import { eventFrom, setEventFrom } from 'event-from';
 
 const handleFocusEvent = (e) => {
   if (eventFrom(e) === 'key') {
-    // set focus styles when focus is from keyboard input
+    // add focus styles when focus is from keyboard input
   }
 };
 

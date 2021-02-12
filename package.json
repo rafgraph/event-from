@@ -37,7 +37,7 @@
   },
   "pre-commit": "lintStaged",
   "lint-staged": {
-    "src/**/*": [
+    "(src/**/*|demo/src/**/*)": [
       "eslint",
       "prettier --write --ignore-unknown"
     ]
