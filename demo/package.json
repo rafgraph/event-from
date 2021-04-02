@@ -5,7 +5,7 @@
   "dependencies": {
     "@modulz/radix-icons": "^4.0.0",
     "@stitches/react": "^0.0.3-canary.4",
-    "event-from": "^0.6.0",
+    "event-from": "^0.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-interactive": "^0.9.5",
