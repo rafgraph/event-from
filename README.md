@@ -109,10 +109,10 @@ const element = document.getElementById('focus-example');
 
 element.addEventListener('focus', handleFocusEvent, false);
 
-// some where in your code where you want to call focus on the element
+// somewhere in your code where you want to call focus on the element
 // and have it be treated as an event from 'key' input
-setEventFrom('key');
 // now the call to eventFrom(e) in handleFocusEvent will return 'key'
+setEventFrom('key');
 element.focus();
 ```
 

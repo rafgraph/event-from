@@ -1,8 +1,9 @@
 export type EventFrom = 'mouse' | 'touch' | 'key';
 
 let recentEventFrom: EventFrom = 'key';
-let recentTouch = false;
 let recentFocusFrom: EventFrom = recentEventFrom;
+let recentTouch = false;
+let recentMouse = false;
 let recentWindowFocus = false;
 
 // To determine if there was a recentTouch event
@@ -32,13 +33,24 @@ const setRecentEventFromTouch = (touchDelay: number) => {
   }, touchDelay);
 };
 
+let recentMouseTimeoutId: number | undefined;
+const setRecentEventFromMouse = () => {
+  recentMouse = true;
+  recentEventFrom = 'mouse';
+
+  window.clearTimeout(recentMouseTimeoutId);
+  recentMouseTimeoutId = window.setTimeout(() => {
+    recentMouse = false;
+  }, 200);
+};
+
 const handleTouchEvent = (touchDelay: number) => () =>
   setRecentEventFromTouch(touchDelay);
 
 const handlePointerEvent = (touchDelay: number) => (e: PointerEvent) => {
   switch (e.pointerType) {
     case 'mouse':
-      recentEventFrom = 'mouse';
+      setRecentEventFromMouse();
       break;
     case 'pen':
     case 'touch':
@@ -49,7 +61,7 @@ const handlePointerEvent = (touchDelay: number) => (e: PointerEvent) => {
 
 const handleMouseEvent = () => {
   if (!recentTouch) {
-    recentEventFrom = 'mouse';
+    setRecentEventFromMouse();
   }
 };
 
@@ -59,7 +71,7 @@ const handleKeyEvent = () => {
 
 // recentFocusFrom tracking
 // set document focus event capture listener which sets recentFocusFrom equal to recentEventFrom
-// except if there is a recent window focus event where the window is the target,
+// except if there is a recent window focus event where the window is the target (unless there is also a recent mouse or touch event),
 // in which case leave recentFocusFrom unchanged to maintain correct recentFocusFrom after switching apps/windows/tabs/etc,
 // if/when the focus event is passed into eventFrom later in the cycle, just return recentFocusFrom.
 // for tracking recent window focus, set window focus capture event listener,
@@ -77,7 +89,7 @@ const handleWindowFocusEvent = (e: FocusEvent) => {
 };
 
 const handleDocumentFocusEvent = () => {
-  if (!recentWindowFocus) {
+  if (!recentWindowFocus || recentMouse || recentTouch) {
     recentFocusFrom = recentEventFrom;
   }
 };
@@ -149,7 +161,7 @@ export const eventFrom: EventFromFunction = (event) => {
   // because move event listeners are not set by Event From
   switch (event.pointerType) {
     case 'mouse':
-      recentEventFrom = 'mouse';
+      setRecentEventFromMouse();
       break;
     case 'pen':
     case 'touch':
@@ -162,7 +174,7 @@ export const eventFrom: EventFromFunction = (event) => {
   }
 
   if (/mouse/.test(event.type) && !recentTouch) {
-    recentEventFrom = 'mouse';
+    setRecentEventFromMouse();
   }
 
   if (/touch/.test(event.type)) {
