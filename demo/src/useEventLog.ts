@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { eventFrom, EventFrom } from 'event-from';
+import { eventFrom, EventFromInput } from 'event-from';
 
 export type EventCategory =
   | 'click'
@@ -70,7 +70,7 @@ interface FindIndexOfRecentEventOfSameType {
   (arg: {
     eventLog: EventLogItem[];
     type: string;
-    eventFrom: EventFrom;
+    eventFrom: EventFromInput;
     nowTime: number;
     recentTimeCutoff: number;
   }): number | undefined;
@@ -127,7 +127,7 @@ const calculateTimeSincePreviousEvent: CalculateTimeSincePreviousEvent = ({
 export interface EventLogItem {
   category: EventCategory;
   type: string;
-  eventFrom: EventFrom;
+  eventFrom: EventFromInput;
   time?: number;
   lastEventTime?: number; // used when counting multiple events of the same time, e.g. mousemove
   timeSincePreviousEvent?: number;
