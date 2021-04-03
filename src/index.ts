@@ -1,7 +1,7 @@
-export type EventFrom = 'mouse' | 'touch' | 'key';
+export type EventFromInput = 'mouse' | 'touch' | 'key';
 
-let recentEventFrom: EventFrom = 'key';
-let recentFocusFrom: EventFrom = recentEventFrom;
+let recentEventFrom: EventFromInput = 'key';
+let recentFocusFrom: EventFromInput = recentEventFrom;
 let recentTouch = false;
 let recentMouse = false;
 let recentWindowFocus = false;
@@ -132,7 +132,7 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
 // note that the eventFrom(e) value will change when new events come in
 // useful when manually generating events, e.g. el.focus() or el.click()
 // and you want eventFrom(e) to treat that event as occurring from a specific input
-export const setEventFrom = (value: EventFrom): void => {
+export const setEventFrom = (value: EventFromInput): void => {
   if (process.env.NODE_ENV !== 'production') {
     if (value !== 'mouse' && value !== 'touch' && value !== 'key') {
       throw Error(
@@ -146,15 +146,9 @@ export const setEventFrom = (value: EventFrom): void => {
   }
 };
 
-interface EventFromFunction {
-  (
-    // use any instead of unknown b/c unknown causes type error when passing a react synthetic event
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    event: { [key: string]: any },
-  ): EventFrom;
-}
-
-export const eventFrom: EventFromFunction = (event) => {
+// use any instead of unknown b/c unknown causes type error when passing a react synthetic event
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const eventFrom = (event: Record<string, any>): EventFromInput => {
   // use the incoming event to help determine recentEventFrom
   // in the same manner as the document event listeners
   // this helps catch edge cases especially when a move event is passed to eventFrom
