@@ -2,21 +2,19 @@ import Interactive from 'react-interactive';
 import { SunIcon } from '@modulz/radix-icons';
 import { styled } from './stitches.config';
 
-interface DarkModeToggleProps {
-  onClick: () => void;
-  className?: any;
+interface InteractiveDarkModeButtonProps {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
 }
-const DarkModeToggle: React.VFC<DarkModeToggleProps> = ({
+const InteractiveDarkModeButton: React.VFC<InteractiveDarkModeButtonProps> = ({
   onClick,
   className,
-  ...props
 }) => {
   return (
     <Interactive
-      {...props}
-      className={className.toString()}
-      onClick={onClick}
       as="button"
+      className={className}
+      onClick={onClick}
       hover={{ className: 'hover' }}
       active={{ className: 'active' }}
       focusFromTab={{
@@ -33,34 +31,34 @@ const DarkModeToggle: React.VFC<DarkModeToggleProps> = ({
   );
 };
 
-export const StyledDarkModeToggle = styled(DarkModeToggle, {
+export const DarkModeButton = styled(InteractiveDarkModeButton, {
   color: '$highContrast',
   width: '30px',
   height: '30px',
   '&.hover, &.active': {
     color: '$green',
   },
-
   '&.focusFromTab': {
-    // have separate outlineColor b/c tokens don't work in outline shorthand
-    // https://github.com/modulz/stitches/issues/103
-    outlineColor: '$green',
-    outline: '2px solid',
+    outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
 });
 
 interface InteractiveLinkProps {
-  children: React.ReactNode;
   href: string;
-  className?: any;
+  className?: string;
+  children: React.ReactNode;
 }
-const InteractiveLink: React.VFC<InteractiveLinkProps> = (props) => {
+const InteractiveLink: React.VFC<InteractiveLinkProps> = ({
+  href,
+  className,
+  children,
+}) => {
   return (
     <Interactive
-      {...props}
-      className={props.className.toString()}
       as="a"
+      href={href}
+      className={className}
       hover={{ className: 'hover' }}
       active="hover"
       focusFromTab={{
@@ -73,27 +71,23 @@ const InteractiveLink: React.VFC<InteractiveLinkProps> = (props) => {
       touchActiveTapOnly
       target="_blank"
       rel="noopener noreferrer"
-    />
+    >
+      {children}
+    </Interactive>
   );
 };
 
-export const StyledInteractiveLink = styled(InteractiveLink, {
+export const Link = styled(InteractiveLink, {
   color: '$highContrast',
-  borderBottom: '2px dotted $green',
+  borderBottom: '2px dotted $colors$green',
   textDecoration: 'none',
-
   '&.hover': {
     borderBottomStyle: 'solid',
   },
-
   '&.focusFromTab': {
-    // have separate outlineColor b/c tokens don't work in outline shorthand
-    // https://github.com/modulz/stitches/issues/103
-    outlineColor: '$green',
-    outline: '2px solid',
+    outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
-
   variants: {
     type: {
       lowContrast: {
@@ -106,55 +100,5 @@ export const StyledInteractiveLink = styled(InteractiveLink, {
         },
       },
     },
-  },
-});
-
-interface InteractiveButtonProps {
-  children: React.ReactNode;
-  onClick: () => void;
-  className?: any;
-}
-const InteractiveButton: React.VFC<InteractiveButtonProps> = (props) => {
-  return (
-    <Interactive
-      {...props}
-      className={props.className.toString()}
-      as="div"
-      hover={{ className: 'hover' }}
-      active="hover"
-      focusFromTab={{
-        className: 'focusFromTab',
-        style: {
-          outline: null,
-          outlineOffset: null,
-        },
-      }}
-      touchActiveTapOnly
-    />
-  );
-};
-
-export const StyledInteractiveButton = styled(InteractiveButton, {
-  color: '$highContrast',
-  border: '2px solid $highContrast',
-  width: '100%',
-  height: '42px',
-  lineHeight: '36px',
-  fontSize: '18px',
-  textAlign: 'center',
-  margin: '25px 0',
-  userSelect: 'none',
-
-  '&.hover': {
-    color: '$green',
-    borderColor: '$green',
-  },
-
-  '&.focusFromTab': {
-    // have separate outlineColor b/c tokens don't work in outline shorthand
-    // https://github.com/modulz/stitches/issues/103
-    outlineColor: '$green',
-    outline: '2px solid',
-    outlineOffset: '2px',
   },
 });

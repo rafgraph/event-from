@@ -6,7 +6,7 @@ import { styled } from './stitches.config';
 const EventLogContainer = styled('div', {
   height: '300px',
   padding: '0 5px',
-  border: '1px solid $highContrast',
+  border: '1px solid $colors$highContrast',
   overflow: 'scroll',
 });
 

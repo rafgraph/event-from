@@ -8,7 +8,7 @@ import { DemoOptionsInterface } from './App';
 const DemoContainer = styled('div', {
   paddingBottom: '20px',
   margin: '20px 0',
-  borderBottom: '1px dotted $lowContrast',
+  borderBottom: '1px dotted $colors$lowContrast',
 });
 
 const TestButton = styled('button', {
@@ -19,14 +19,13 @@ const TestButton = styled('button', {
   fontSize: '24px',
   textAlign: 'center',
   color: '$highContrast',
-  border: '1px solid $highContrast',
-  ':hover, &:active': {
+  border: '1px solid $colors$highContrast',
+  '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
   },
-  ':focus': {
-    outlineColor: '$green',
-    outline: '2px solid',
+  '&:focus': {
+    outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
 });
@@ -37,13 +36,12 @@ const TestLinkContainer = styled('div', {
 
 const TestLink = styled('a', {
   fontSize: '24px',
-  ':hover, &:active': {
+  '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
   },
-  ':focus': {
-    outlineColor: '$green',
-    outline: '2px solid',
+  '&:focus': {
+    outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
 });
@@ -52,7 +50,7 @@ const ScrollableContainer = styled('div', {
   margin: '10px 0',
   height: '100px',
   padding: '0 5px',
-  border: '1px solid $highContrast',
+  border: '1px solid $colors$highContrast',
   overflow: 'scroll',
 });
 
@@ -69,15 +67,14 @@ const FormHeader = styled('h3', {
 const TextInput = styled('input', {
   width: '100%',
   fontSize: '24px',
-  border: '1px solid $highContrast',
+  border: '1px solid $colors$highContrast',
   padding: '2px 4px',
-  ':hover, &:active': {
+  '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
   },
-  ':focus': {
-    outlineColor: '$green',
-    outline: '2px solid',
+  '&:focus': {
+    outline: '2px solid $colors$green',
     outlineOffset: '-1px',
   },
 });
@@ -90,14 +87,13 @@ const SubmitInput = styled('input', {
   fontSize: '24px',
   textAlign: 'center',
   color: '$highContrast',
-  border: '1px solid $highContrast',
-  ':hover, &:active': {
+  border: '1px solid $colors$highContrast',
+  '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
   },
-  ':focus': {
-    outlineColor: '$green',
-    outline: '2px solid',
+  '&:focus': {
+    outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
 });

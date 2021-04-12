@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import useDarkMode from 'use-dark-mode';
 import { styled, globalStyles, darkThemeClass } from './stitches.config';
-import { StyledInteractiveLink, StyledDarkModeToggle } from './Interactive';
+import { Link, DarkModeButton } from './Interactive';
 import {
   ButtonDemo,
   LinkDemo,
@@ -24,11 +24,11 @@ const H1 = styled('h1', {
 
 const InfoP = styled('p', {
   padding: '10px 0',
-  borderBottom: '1px dotted $lowContrast',
+  borderBottom: '1px dotted $colors$lowContrast',
 });
 
 const DemoOptionsContainer = styled('div', {
-  borderBottom: '1px dotted $lowContrast',
+  borderBottom: '1px dotted $colors$lowContrast',
 });
 
 const DemoOptionsButton = styled('button', {
@@ -38,13 +38,12 @@ const DemoOptionsButton = styled('button', {
   margin: '10px 0',
   fontSize: '20px',
   color: '$highContrast',
-  ':hover, &:active': {
+  '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
   },
-  ':focus': {
-    outlineColor: '$green',
-    outline: '2px solid',
+  '&:focus': {
+    outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
 });
@@ -61,18 +60,17 @@ const OptionItemContainer = styled('div', {
   margin: '4px 0',
 });
 
-const StyledLabel = styled('label', {
+const OptionLabel = styled('label', {
   cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
 });
 
-const StyledCheckbox = styled('input', {
+const OptionCheckbox = styled('input', {
   appearance: 'checkbox',
   verticalAlign: 'middle',
   marginRight: '4px',
-  ':focus': {
-    outlineColor: '$green',
-    outline: '2px solid',
+  '&:focus': {
+    outline: '2px solid $colors$green',
     outlineOffset: '1px',
   },
 });
@@ -89,14 +87,14 @@ const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
   update,
 }) => (
   <OptionItemContainer>
-    <StyledLabel>
-      <StyledCheckbox
+    <OptionLabel>
+      <OptionCheckbox
         type="checkbox"
         checked={checked}
         onChange={() => update((prevState) => !prevState)}
       />
       {label}
-    </StyledLabel>
+    </OptionLabel>
   </OptionItemContainer>
 );
 
@@ -187,16 +185,13 @@ export const App = () => {
 
   return (
     <AppDiv>
-      <H1>
+      <H1 className={undefined}>
         <span>Event From Demo</span>
-        <StyledDarkModeToggle onClick={darkMode.toggle} />
+        <DarkModeButton onClick={darkMode.toggle} />
       </H1>
-      <StyledInteractiveLink
-        type="lowContrast"
-        href="https://github.com/rafgraph/event-from"
-      >
+      <Link type="lowContrast" href="https://github.com/rafgraph/event-from">
         https://github.com/rafgraph/event-from
-      </StyledInteractiveLink>
+      </Link>
       <InfoP>
         A collection of buttons, links, etc with event listeners and logs to
         demonstrate <code>eventFrom</code>.

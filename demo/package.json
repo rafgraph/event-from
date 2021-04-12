@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@modulz/radix-icons": "^4.0.0",
-    "@stitches/react": "^0.0.3-canary.4",
+    "@stitches/react": "^0.1.5",
     "event-from": "^0.7.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -12,17 +12,17 @@
     "use-dark-mode": "^2.3.1"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.7.0",
-    "@types/jest": "^26.0.20",
-    "@types/node": "^14.14.26",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
+    "@testing-library/user-event": "^13.1.2",
+    "@types/jest": "^26.0.22",
+    "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "browserslist-config-css-grid": "^1.0.0",
     "gh-pages": "^3.1.0",
     "react-scripts": "4.0.3",
-    "typescript": "^4.1.5"
+    "typescript": "^4.2.4"
   },
   "scripts": {
     "dev": "npm install ../ && npm start",
