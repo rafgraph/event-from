@@ -1,4 +1,4 @@
-import Interactive from 'react-interactive';
+import { Interactive } from 'react-interactive';
 import { SunIcon } from '@modulz/radix-icons';
 import { styled } from './stitches.config';
 
@@ -11,21 +11,7 @@ const InteractiveDarkModeButton: React.VFC<InteractiveDarkModeButtonProps> = ({
   className,
 }) => {
   return (
-    <Interactive
-      as="button"
-      className={className}
-      onClick={onClick}
-      hover={{ className: 'hover' }}
-      active={{ className: 'active' }}
-      focusFromTab={{
-        className: 'focusFromTab',
-        style: {
-          outline: null,
-          outlineOffset: null,
-        },
-      }}
-      touchActiveTapOnly
-    >
+    <Interactive as="button" className={className} onClick={onClick}>
       <SunIcon width="30" height="30" />
     </Interactive>
   );
@@ -38,7 +24,7 @@ export const DarkModeButton = styled(InteractiveDarkModeButton, {
   '&.hover, &.active': {
     color: '$green',
   },
-  '&.focusFromTab': {
+  '&.focusFromKey': {
     outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
@@ -59,16 +45,6 @@ const InteractiveLink: React.VFC<InteractiveLinkProps> = ({
       as="a"
       href={href}
       className={className}
-      hover={{ className: 'hover' }}
-      active="hover"
-      focusFromTab={{
-        className: 'focusFromTab',
-        style: {
-          outline: null,
-          outlineOffset: null,
-        },
-      }}
-      touchActiveTapOnly
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -81,10 +57,10 @@ export const Link = styled(InteractiveLink, {
   color: '$highContrast',
   borderBottom: '2px dotted $colors$green',
   textDecoration: 'none',
-  '&.hover': {
+  '&.hover, &.active': {
     borderBottomStyle: 'solid',
   },
-  '&.focusFromTab': {
+  '&.focusFromKey': {
     outline: '2px solid $colors$green',
     outlineOffset: '2px',
   },
@@ -94,8 +70,7 @@ export const Link = styled(InteractiveLink, {
         color: '$lowContrast',
         fontSize: '14px',
         borderBottomWidth: '1px',
-
-        '&.hover': {
+        '&.hover, &.active': {
           color: '$highContrast',
         },
       },
