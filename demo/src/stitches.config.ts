@@ -1,9 +1,10 @@
-import { createCss } from '@stitches/react';
+import { createCss, StitchesCss } from '@stitches/react';
 
-export const { styled, theme, global: createGlobalCss } = createCss({
+const stitchesConfig = createCss({
   theme: {
     colors: {
       pageBackground: 'rgb(240,240,240)',
+      backgroundContrast: 'rgb(216,216,216)',
       highContrast: 'rgb(0,0,0)',
       lowContrast: 'rgb(128,128,128)',
       red: 'hsl(0,100%,50%)',
@@ -17,9 +18,14 @@ export const { styled, theme, global: createGlobalCss } = createCss({
   },
 });
 
+export type CSS = StitchesCss<typeof stitchesConfig>;
+
+export const { styled, theme, global: createGlobalCss } = stitchesConfig;
+
 export const darkThemeClass = theme({
   colors: {
     pageBackground: 'rgb(32,32,32)',
+    backgroundContrast: 'rgb(64,64,64)',
     highContrast: 'rgb(192,192,192)',
     lowContrast: 'rgb(136,136,136)',
     red: 'hsl(0,100%,50%)',

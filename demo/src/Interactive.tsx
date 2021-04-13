@@ -1,4 +1,5 @@
 import { Interactive } from 'react-interactive';
+import { SunIcon } from '@modulz/radix-icons';
 import { styled } from './stitches.config';
 
 interface InteractiveButtonProps {
@@ -81,7 +82,7 @@ const InteractiveLink: React.VFC<InteractiveLinkProps> = ({
 };
 export const Link = styled(InteractiveLink, {
   color: '$highContrast',
-  borderBottom: '2px dotted $colors$green',
+  borderBottom: '1px dotted $colors$green',
   textDecoration: 'none',
   WebkitTapHighlightColor: 'transparent',
   '&.hover, &.active': {
@@ -96,11 +97,27 @@ export const Link = styled(InteractiveLink, {
       lowContrast: {
         color: '$lowContrast',
         fontSize: '14px',
-        borderBottomWidth: '1px',
         '&.hover, &.active': {
           color: '$highContrast',
         },
       },
     },
   },
+});
+
+interface DarkModeButtonBaseProps {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}
+const DarkModeButtonBase: React.VFC<DarkModeButtonBaseProps> = ({
+  onClick,
+  className,
+}) => (
+  <ButtonBase className={className} onClick={onClick}>
+    <SunIcon width="30" height="30" />
+  </ButtonBase>
+);
+export const DarkModeButton = styled(DarkModeButtonBase, {
+  width: '30px',
+  height: '30px',
 });

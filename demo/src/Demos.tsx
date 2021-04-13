@@ -1,5 +1,6 @@
 import { useMemo, useContext } from 'react';
-import { styled } from './stitches.config';
+import { Interactive, InteractiveExtendableProps } from 'react-interactive';
+import { styled, CSS } from './stitches.config';
 import { useEventLog } from './useEventLog';
 import { EventLogUI } from './EventLogUI';
 import { OptionsContext } from './App';
@@ -10,7 +11,7 @@ const DemoContainer = styled('div', {
   borderBottom: '1px dotted $colors$lowContrast',
 });
 
-const TestButton = styled('button', {
+const DemoButtonSharedStyle: CSS = {
   display: 'block',
   width: '100%',
   height: '70px',
@@ -19,6 +20,26 @@ const TestButton = styled('button', {
   textAlign: 'center',
   color: '$highContrast',
   border: '1px solid $colors$highContrast',
+};
+
+const InteractiveButton: React.VFC<InteractiveExtendableProps<'button'>> = (
+  props,
+) => <Interactive {...props} as="button" />;
+
+const DemoButtonInteractive = styled(InteractiveButton, {
+  ...DemoButtonSharedStyle,
+  '&.hover, &.active': {
+    color: '$green',
+    borderColor: '$green',
+  },
+  '&.focusFromKey': {
+    outline: '2px solid $colors$green',
+    outlineOffset: '2px',
+  },
+});
+
+const DemoButtonRegular = styled('button', {
+  ...DemoButtonSharedStyle,
   '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
@@ -29,12 +50,32 @@ const TestButton = styled('button', {
   },
 });
 
-const TestLinkContainer = styled('div', {
+const DemoLinkContainer = styled('div', {
   margin: '10px 0',
 });
 
-const TestLink = styled('a', {
+const DemoLinkSharedStyle: CSS = {
   fontSize: '24px',
+};
+
+const InteractiveLink: React.VFC<InteractiveExtendableProps<'a'>> = (props) => (
+  <Interactive {...props} as="a" />
+);
+
+const DemoLinkInteractive = styled(InteractiveLink, {
+  ...DemoLinkSharedStyle,
+  '&.hover, &.active': {
+    color: '$green',
+    borderColor: '$green',
+  },
+  '&.focusFromKey': {
+    outline: '2px solid $colors$green',
+    outlineOffset: '2px',
+  },
+});
+
+const DemoLinkRegular = styled('a', {
+  ...DemoLinkSharedStyle,
   '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
@@ -63,11 +104,31 @@ const FormHeader = styled('h3', {
   color: '$lowContrast',
 });
 
-const TextInput = styled('input', {
+const DemoTextInputSharedStyle: CSS = {
   width: '100%',
   fontSize: '24px',
   border: '1px solid $colors$highContrast',
   padding: '2px 4px',
+};
+
+const InteractiveTextInput: React.VFC<InteractiveExtendableProps<'input'>> = (
+  props,
+) => <Interactive {...props} as="input" type="text" />;
+
+const DemoTextInputInteractive = styled(InteractiveTextInput, {
+  ...DemoTextInputSharedStyle,
+  '&.hover, &.active': {
+    color: '$green',
+    borderColor: '$green',
+  },
+  '&.focus': {
+    outline: '2px solid $colors$green',
+    outlineOffset: '-1px',
+  },
+});
+
+const DemoTextInputRegular = styled('input', {
+  ...DemoTextInputSharedStyle,
   '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
@@ -78,7 +139,7 @@ const TextInput = styled('input', {
   },
 });
 
-const SubmitInput = styled('input', {
+const DemoSubmitInputSharedStyle: CSS = {
   display: 'block',
   width: '100%',
   height: '44px',
@@ -87,6 +148,26 @@ const SubmitInput = styled('input', {
   textAlign: 'center',
   color: '$highContrast',
   border: '1px solid $colors$highContrast',
+};
+
+const InteractiveSubmitInput: React.VFC<InteractiveExtendableProps<'input'>> = (
+  props,
+) => <Interactive {...props} as="input" type="submit" />;
+
+const DemoSubmitInputInteractive = styled(InteractiveSubmitInput, {
+  ...DemoSubmitInputSharedStyle,
+  '&.hover, &.active': {
+    color: '$green',
+    borderColor: '$green',
+  },
+  '&.focusFromKey': {
+    outline: '2px solid $colors$green',
+    outlineOffset: '2px',
+  },
+});
+
+const DemoSubmitInputRegular = styled('input', {
+  ...DemoSubmitInputSharedStyle,
   '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
@@ -99,6 +180,8 @@ const SubmitInput = styled('input', {
 
 export const ButtonDemo: React.VFC = () => {
   const {
+    useReactInteractive,
+    riUseExtendedTouchActive,
     touchActionNone,
     webkitTapHighlightColorTransparent,
     webkitTouchCalloutNone,
@@ -106,18 +189,32 @@ export const ButtonDemo: React.VFC = () => {
   const { eventLog, eventListeners } = useEventLog();
   return (
     <DemoContainer id="button-demo">
-      <TestButton
-        {...eventListeners}
-        style={{
-          touchAction: touchActionNone ? 'none' : undefined,
-          WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-            ? 'transparent'
-            : undefined,
-          WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-        }}
-      >
-        Test Button
-      </TestButton>
+      {useReactInteractive ? (
+        <DemoButtonInteractive
+          {...eventListeners}
+          useExtendedTouchActive={riUseExtendedTouchActive}
+          css={{
+            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+              ? 'transparent'
+              : undefined,
+          }}
+        >
+          Test Button
+        </DemoButtonInteractive>
+      ) : (
+        <DemoButtonRegular
+          {...eventListeners}
+          css={{
+            touchAction: touchActionNone ? 'none' : undefined,
+            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+              ? 'transparent'
+              : undefined,
+            WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+          }}
+        >
+          Test Button
+        </DemoButtonRegular>
+      )}
       <EventLogUI eventLog={eventLog} />
     </DemoContainer>
   );
@@ -125,6 +222,8 @@ export const ButtonDemo: React.VFC = () => {
 
 export const LinkDemo: React.VFC = () => {
   const {
+    useReactInteractive,
+    riUseExtendedTouchActive,
     touchActionNone,
     webkitTapHighlightColorTransparent,
     webkitTouchCalloutNone,
@@ -133,22 +232,37 @@ export const LinkDemo: React.VFC = () => {
   const { eventLog, eventListeners } = useEventLog();
   return (
     <DemoContainer id="link-demo">
-      <TestLinkContainer>
-        <TestLink
-          {...eventListeners}
-          href="#link-demo"
-          draggable={draggableFalse ? false : undefined}
-          style={{
-            touchAction: touchActionNone ? 'none' : undefined,
-            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-              ? 'transparent'
-              : undefined,
-            WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-          }}
-        >
-          Test link with href="#link-demo"
-        </TestLink>
-      </TestLinkContainer>
+      <DemoLinkContainer>
+        {useReactInteractive ? (
+          <DemoLinkInteractive
+            {...eventListeners}
+            href="#link-demo"
+            useExtendedTouchActive={riUseExtendedTouchActive}
+            css={{
+              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+                ? 'transparent'
+                : undefined,
+            }}
+          >
+            Test link with href="#link-demo"
+          </DemoLinkInteractive>
+        ) : (
+          <DemoLinkRegular
+            {...eventListeners}
+            href="#link-demo"
+            draggable={draggableFalse ? false : undefined}
+            css={{
+              touchAction: touchActionNone ? 'none' : undefined,
+              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+                ? 'transparent'
+                : undefined,
+              WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+            }}
+          >
+            Test link with href="#link-demo"
+          </DemoLinkRegular>
+        )}
+      </DemoLinkContainer>
       <EventLogUI eventLog={eventLog} />
     </DemoContainer>
   );
@@ -165,7 +279,7 @@ export const ScrollableDemo: React.VFC = () => {
     <DemoContainer id="scrollable-demo">
       <ScrollableContainer
         {...eventListeners}
-        style={{
+        css={{
           touchAction: touchActionNone ? 'none' : undefined,
           WebkitTapHighlightColor: webkitTapHighlightColorTransparent
             ? 'transparent'
@@ -190,6 +304,8 @@ export const ScrollableDemo: React.VFC = () => {
 
 export const FormDemo: React.VFC = () => {
   const {
+    useReactInteractive,
+    riUseExtendedTouchActive,
     touchActionNone,
     webkitTapHighlightColorTransparent,
     webkitTouchCalloutNone,
@@ -199,30 +315,56 @@ export const FormDemo: React.VFC = () => {
   return (
     <DemoContainer id="form-demo">
       <form onSubmit={(e) => e.preventDefault()}>
-        <TextInput
-          {...textInput.eventListeners}
-          type="text"
-          placeholder="Form demo"
-          style={{
-            touchAction: touchActionNone ? 'none' : undefined,
-            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-              ? 'transparent'
-              : undefined,
-            WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-          }}
-        />
-        <SubmitInput
-          {...submitInput.eventListeners}
-          type="submit"
-          value="Submit"
-          style={{
-            touchAction: touchActionNone ? 'none' : undefined,
-            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-              ? 'transparent'
-              : undefined,
-            WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-          }}
-        />
+        {useReactInteractive ? (
+          <DemoTextInputInteractive
+            {...textInput.eventListeners}
+            useExtendedTouchActive={riUseExtendedTouchActive}
+            placeholder="Form demo"
+            css={{
+              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+                ? 'transparent'
+                : undefined,
+            }}
+          />
+        ) : (
+          <DemoTextInputRegular
+            {...textInput.eventListeners}
+            type="text"
+            placeholder="Form demo"
+            css={{
+              touchAction: touchActionNone ? 'none' : undefined,
+              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+                ? 'transparent'
+                : undefined,
+              WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+            }}
+          />
+        )}
+        {useReactInteractive ? (
+          <DemoSubmitInputInteractive
+            {...submitInput.eventListeners}
+            useExtendedTouchActive={riUseExtendedTouchActive}
+            value="Submit"
+            css={{
+              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+                ? 'transparent'
+                : undefined,
+            }}
+          />
+        ) : (
+          <DemoSubmitInputRegular
+            {...submitInput.eventListeners}
+            type="submit"
+            value="Submit"
+            css={{
+              touchAction: touchActionNone ? 'none' : undefined,
+              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+                ? 'transparent'
+                : undefined,
+              WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+            }}
+          />
+        )}
       </form>
       <FormHeader>Text input event log</FormHeader>
       <EventLogUI eventLog={textInput.eventLog} height="150px" />

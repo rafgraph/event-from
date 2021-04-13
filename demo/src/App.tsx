@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo, createContext } from 'react';
 import useDarkMode from 'use-dark-mode';
-import { SunIcon } from '@modulz/radix-icons';
 import { styled, globalCss, darkThemeClass } from './stitches.config';
-import { Link, ButtonBase, CheckboxBase } from './Interactive';
+import { Link, ButtonBase, CheckboxBase, DarkModeButton } from './Interactive';
 import {
   ButtonDemo,
   LinkDemo,
@@ -14,25 +13,6 @@ const AppDiv = styled('div', {
   maxWidth: '700px',
   padding: '14px 15px 25px',
   margin: '0 auto',
-});
-
-interface SunIconButtonProps {
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  className?: string;
-}
-
-const SunIconButton: React.VFC<SunIconButtonProps> = ({
-  onClick,
-  className,
-}) => (
-  <ButtonBase className={className} onClick={onClick}>
-    <SunIcon width="30" height="30" />
-  </ButtonBase>
-);
-
-const DarkModeButton = styled(SunIconButton, {
-  width: '30px',
-  height: '30px',
 });
 
 const H1 = styled('h1', {
@@ -49,6 +29,11 @@ const InfoContainer = styled('p', {
 
 const DemoOptionsContainer = styled('div', {
   borderBottom: '1px dotted $colors$lowContrast',
+  '& code': {
+    backgroundColor: '$backgroundContrast',
+    padding: '0 5px',
+    borderRadius: '5px',
+  },
 });
 
 const DemoOptionsButton = styled(ButtonBase, {
@@ -63,6 +48,7 @@ const OptionsContainer = styled('div', {
 
 const OptionSectionHeading = styled('div', {
   margin: '14px 0 6px',
+  fontWeight: '600',
 });
 
 const OptionItemContainer = styled('div', {
@@ -72,6 +58,14 @@ const OptionItemContainer = styled('div', {
 const OptionLabel = styled('label', {
   cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
+  variants: {
+    disabled: {
+      true: {
+        opacity: 0.5,
+        cursor: 'unset',
+      },
+    },
+  },
 });
 
 const OptionCheckbox = styled(CheckboxBase, {
@@ -82,17 +76,20 @@ const OptionCheckbox = styled(CheckboxBase, {
 interface OptionItemCheckboxProps {
   label: React.ReactNode;
   checked: boolean;
+  disabled?: boolean;
   update: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
   label,
   checked,
+  disabled,
   update,
 }) => (
   <OptionItemContainer>
-    <OptionLabel>
+    <OptionLabel disabled={disabled}>
       <OptionCheckbox
+        disabled={disabled}
         checked={checked}
         onChange={() => update((prevState) => !prevState)}
       />
@@ -102,10 +99,12 @@ const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
 );
 
 interface DemoOptionsInterface {
+  useReactInteractive: boolean;
   setMoveListeners: boolean;
   preventDefaultOnAll: boolean;
   touchActionNone: boolean;
   webkitTapHighlightColorTransparent: boolean;
+  riUseExtendedTouchActive: boolean;
   userSelectNone: boolean;
   webkitTouchCalloutNone: boolean;
   contextMenuPreventDefault: boolean;
@@ -120,10 +119,12 @@ interface DemoOptionsInterface {
 }
 
 export const OptionsContext = createContext<DemoOptionsInterface>({
+  useReactInteractive: false,
   setMoveListeners: false,
   preventDefaultOnAll: false,
   touchActionNone: false,
   webkitTapHighlightColorTransparent: false,
+  riUseExtendedTouchActive: false,
   userSelectNone: false,
   webkitTouchCalloutNone: false,
   contextMenuPreventDefault: false,
@@ -147,6 +148,7 @@ export const App = () => {
   const [showDemoOptions, updateShowDemoOptions] = useState(false);
 
   // options
+  const [useReactInteractive, updateUseReactInteractive] = useState(true);
   const [setMoveListeners, updateSetMoveListeners] = useState(true);
   const [preventDefaultOnAll, updatePreventDefaultOnAll] = useState(false);
   const [touchActionNone, updateTouchActionNone] = useState(false);
@@ -156,6 +158,10 @@ export const App = () => {
   ] = useState(true);
 
   // options to enable long press on touch devices
+  const [
+    riUseExtendedTouchActive,
+    updateInteractiveUseExtendedTouchActive,
+  ] = useState(false);
   const [userSelectNone, updateUserSelectNone] = useState(false);
   const [contextMenuPreventDefault, updateContextMenuPreventDefault] = useState(
     false,
@@ -164,6 +170,14 @@ export const App = () => {
     false,
   );
   const [draggableFalse, updateDraggableFalse] = useState(false);
+
+  // when using react-interactive ensure the the following are set to false
+  if (useReactInteractive) {
+    userSelectNone && updateUserSelectNone(false);
+    contextMenuPreventDefault && updateContextMenuPreventDefault(false);
+    webkitTouchCalloutNone && updateWebkitTouchCalloutNone(false);
+    draggableFalse && updateDraggableFalse(false);
+  }
 
   // event log options
   const [
@@ -182,10 +196,12 @@ export const App = () => {
 
   const demoOptions: DemoOptionsInterface = useMemo(
     () => ({
+      useReactInteractive,
       setMoveListeners,
       preventDefaultOnAll,
       touchActionNone,
       webkitTapHighlightColorTransparent,
+      riUseExtendedTouchActive,
       userSelectNone,
       webkitTouchCalloutNone,
       contextMenuPreventDefault,
@@ -199,10 +215,12 @@ export const App = () => {
       consoleLogEvents,
     }),
     [
+      useReactInteractive,
       setMoveListeners,
       preventDefaultOnAll,
       touchActionNone,
       webkitTapHighlightColorTransparent,
+      riUseExtendedTouchActive,
       userSelectNone,
       webkitTouchCalloutNone,
       contextMenuPreventDefault,
@@ -247,6 +265,19 @@ export const App = () => {
             <OptionItemCheckbox
               label={
                 <>
+                  Use{' '}
+                  <Link href="https://github.com/rafgraph/react-interactive">
+                    React Interactive
+                  </Link>{' '}
+                  for interactive elements in demo (button, link, input, etc)
+                </>
+              }
+              checked={useReactInteractive}
+              update={updateUseReactInteractive}
+            />
+            <OptionItemCheckbox
+              label={
+                <>
                   Set <code>move</code> event listeners in demo
                 </>
               }
@@ -263,7 +294,14 @@ export const App = () => {
               update={updatePreventDefaultOnAll}
             />
             <OptionItemCheckbox
-              label={<code>touch-action: none</code>}
+              label={
+                <>
+                  <code>touch-action: none</code>, set on the element, prevents
+                  the browser from using the touch interaction, e.g. scrolling
+                  when touch starts on the button, and also prevents{' '}
+                  <code>pointercancel</code> event during a touch interaction.
+                </>
+              }
               checked={touchActionNone}
               update={updateTouchActionNone}
             />
@@ -276,6 +314,20 @@ export const App = () => {
               Options to enable long press on touch devices:
             </OptionSectionHeading>
             <OptionItemCheckbox
+              disabled={!useReactInteractive}
+              label={
+                <>
+                  React Interactive's <code>useExtendedTouchActive</code>, note
+                  that when using React Interactive the below options are
+                  disabled because they are implemented by React Interactive
+                  when <code>useExtendedTouchActive</code> is true.
+                </>
+              }
+              checked={riUseExtendedTouchActive}
+              update={updateInteractiveUseExtendedTouchActive}
+            />
+            <OptionItemCheckbox
+              disabled={useReactInteractive}
               label={
                 <>
                   <code>user-select: none</code>, set on the{' '}
@@ -289,6 +341,7 @@ export const App = () => {
               update={updateUserSelectNone}
             />
             <OptionItemCheckbox
+              disabled={useReactInteractive}
               label={
                 <>
                   <code>contextmenu</code> event <code>preventDefault()</code>,
@@ -300,6 +353,7 @@ export const App = () => {
               update={updateContextMenuPreventDefault}
             />
             <OptionItemCheckbox
+              disabled={useReactInteractive}
               label={
                 <>
                   <code>-webkit-touch-callout: none</code>, to prevent the iOS
@@ -311,6 +365,7 @@ export const App = () => {
               update={updateWebkitTouchCalloutNone}
             />
             <OptionItemCheckbox
+              disabled={useReactInteractive}
               label={
                 <>
                   <code>draggable="false"</code>, to prevent from dragging links
