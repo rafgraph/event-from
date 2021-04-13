@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { eventFrom, EventFromInput } from 'event-from';
+import { OptionsContext } from './App';
 
 export type EventCategory =
   | 'click'
@@ -142,24 +143,19 @@ interface EventListener {
   [key: string]: React.EventHandler<any>;
 }
 
-interface UseEventLog {
-  (options: {
-    setMoveListeners?: boolean;
-    preventDefaultOnAll: boolean;
-    contextMenuPreventDefault: boolean;
-    consoleLogEvents: boolean;
-  }): {
-    eventLog: EventLogItem[];
-    eventListeners: EventListener;
-  };
-}
+type UseEventLog = () => {
+  eventLog: EventLogItem[];
+  eventListeners: EventListener;
+};
 
-export const useEventLog: UseEventLog = ({
-  setMoveListeners,
-  preventDefaultOnAll,
-  contextMenuPreventDefault,
-  consoleLogEvents,
-}) => {
+export const useEventLog: UseEventLog = () => {
+  const {
+    setMoveListeners,
+    preventDefaultOnAll,
+    contextMenuPreventDefault,
+    consoleLogEvents,
+  } = useContext(OptionsContext);
+
   const [eventLog, updateEventLog] = useState<EventLogItem[]>([]);
 
   const eventListeners = useMemo(

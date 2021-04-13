@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo, createContext } from 'react';
 import useDarkMode from 'use-dark-mode';
-import { styled, globalStyles, darkThemeClass } from './stitches.config';
-import { Link, DarkModeButton } from './Interactive';
+import { SunIcon } from '@modulz/radix-icons';
+import { styled, globalCss, darkThemeClass } from './stitches.config';
+import { Link, ButtonBase, CheckboxBase } from './Interactive';
 import {
   ButtonDemo,
   LinkDemo,
@@ -15,6 +16,25 @@ const AppDiv = styled('div', {
   margin: '0 auto',
 });
 
+interface SunIconButtonProps {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
+}
+
+const SunIconButton: React.VFC<SunIconButtonProps> = ({
+  onClick,
+  className,
+}) => (
+  <ButtonBase className={className} onClick={onClick}>
+    <SunIcon width="30" height="30" />
+  </ButtonBase>
+);
+
+const DarkModeButton = styled(SunIconButton, {
+  width: '30px',
+  height: '30px',
+});
+
 const H1 = styled('h1', {
   fontSize: '26px',
   display: 'flex',
@@ -22,7 +42,7 @@ const H1 = styled('h1', {
   marginBottom: '2px',
 });
 
-const InfoP = styled('p', {
+const InfoContainer = styled('p', {
   padding: '10px 0',
   borderBottom: '1px dotted $colors$lowContrast',
 });
@@ -31,21 +51,10 @@ const DemoOptionsContainer = styled('div', {
   borderBottom: '1px dotted $colors$lowContrast',
 });
 
-const DemoOptionsButton = styled('button', {
-  cursor: 'pointer',
-  WebkitTapHighlightColor: 'transparent',
+const DemoOptionsButton = styled(ButtonBase, {
   display: 'block',
   margin: '10px 0',
   fontSize: '20px',
-  color: '$highContrast',
-  '&:hover, &:active': {
-    color: '$green',
-    borderColor: '$green',
-  },
-  '&:focus': {
-    outline: '2px solid $colors$green',
-    outlineOffset: '2px',
-  },
 });
 
 const OptionsContainer = styled('div', {
@@ -65,14 +74,9 @@ const OptionLabel = styled('label', {
   WebkitTapHighlightColor: 'transparent',
 });
 
-const OptionCheckbox = styled('input', {
-  appearance: 'checkbox',
+const OptionCheckbox = styled(CheckboxBase, {
   verticalAlign: 'middle',
   marginRight: '4px',
-  '&:focus': {
-    outline: '2px solid $colors$green',
-    outlineOffset: '1px',
-  },
 });
 
 interface OptionItemCheckboxProps {
@@ -89,7 +93,6 @@ const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
   <OptionItemContainer>
     <OptionLabel>
       <OptionCheckbox
-        type="checkbox"
         checked={checked}
         onChange={() => update((prevState) => !prevState)}
       />
@@ -98,7 +101,7 @@ const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
   </OptionItemContainer>
 );
 
-export interface DemoOptionsInterface {
+interface DemoOptionsInterface {
   setMoveListeners: boolean;
   preventDefaultOnAll: boolean;
   touchActionNone: boolean;
@@ -116,8 +119,26 @@ export interface DemoOptionsInterface {
   consoleLogEvents: boolean;
 }
 
+export const OptionsContext = createContext<DemoOptionsInterface>({
+  setMoveListeners: false,
+  preventDefaultOnAll: false,
+  touchActionNone: false,
+  webkitTapHighlightColorTransparent: false,
+  userSelectNone: false,
+  webkitTouchCalloutNone: false,
+  contextMenuPreventDefault: false,
+  draggableFalse: false,
+  showTimeSincePreviousEvent: false,
+  showEventCoordinates: false,
+  showPointerEvents: false,
+  showMouseEvents: false,
+  showTouchEvents: false,
+  showTimeSincePreviousPointerdown: false,
+  consoleLogEvents: false,
+});
+
 export const App = () => {
-  globalStyles();
+  globalCss();
 
   const darkMode = useDarkMode(undefined, {
     classNameDark: darkThemeClass,
@@ -148,7 +169,7 @@ export const App = () => {
   const [
     showTimeSincePreviousEvent,
     updateShowTimeSincePreviousEvent,
-  ] = useState(true);
+  ] = useState(false);
   const [
     showTimeSincePreviousPointerdown,
     updateShowTimeSincePreviousPointerdown,
@@ -159,26 +180,45 @@ export const App = () => {
   const [showTouchEvents, updateShowTouchEvents] = useState(true);
   const [consoleLogEvents, updateConsoleLogEvents] = useState(false);
 
-  const demoOptions: DemoOptionsInterface = {
-    setMoveListeners,
-    preventDefaultOnAll,
-    touchActionNone,
-    webkitTapHighlightColorTransparent,
-    userSelectNone,
-    webkitTouchCalloutNone,
-    contextMenuPreventDefault,
-    draggableFalse,
-    showTimeSincePreviousEvent,
-    showEventCoordinates,
-    showPointerEvents,
-    showMouseEvents,
-    showTouchEvents,
-    showTimeSincePreviousPointerdown,
-    consoleLogEvents,
-  };
+  const demoOptions: DemoOptionsInterface = useMemo(
+    () => ({
+      setMoveListeners,
+      preventDefaultOnAll,
+      touchActionNone,
+      webkitTapHighlightColorTransparent,
+      userSelectNone,
+      webkitTouchCalloutNone,
+      contextMenuPreventDefault,
+      draggableFalse,
+      showTimeSincePreviousEvent,
+      showEventCoordinates,
+      showPointerEvents,
+      showMouseEvents,
+      showTouchEvents,
+      showTimeSincePreviousPointerdown,
+      consoleLogEvents,
+    }),
+    [
+      setMoveListeners,
+      preventDefaultOnAll,
+      touchActionNone,
+      webkitTapHighlightColorTransparent,
+      userSelectNone,
+      webkitTouchCalloutNone,
+      contextMenuPreventDefault,
+      draggableFalse,
+      showTimeSincePreviousEvent,
+      showEventCoordinates,
+      showPointerEvents,
+      showMouseEvents,
+      showTouchEvents,
+      showTimeSincePreviousPointerdown,
+      consoleLogEvents,
+    ],
+  );
 
   // set user-select: none on the body when userSelectNone is enabled
-  useMemo(() => {
+  useEffect(() => {
     document.body.style.userSelect = userSelectNone ? 'none' : '';
     document.body.style.webkitUserSelect = userSelectNone ? 'none' : '';
   }, [userSelectNone]);
@@ -192,10 +232,10 @@ export const App = () => {
       <Link type="lowContrast" href="https://github.com/rafgraph/event-from">
         https://github.com/rafgraph/event-from
       </Link>
-      <InfoP>
-        A collection of buttons, links, etc with event listeners and logs to
-        demonstrate <code>eventFrom</code>.
-      </InfoP>
+      <InfoContainer>
+        Some buttons, links, etc with event listeners and logs to demonstrate{' '}
+        <code>eventFrom</code>.
+      </InfoContainer>
       <DemoOptionsContainer>
         <DemoOptionsButton
           onClick={() => updateShowDemoOptions(!showDemoOptions)}
@@ -240,8 +280,9 @@ export const App = () => {
                 <>
                   <code>user-select: none</code>, set on the{' '}
                   <code>{'<body>'}</code>, iOS on long press attempts to select
-                  nearby text even if the target element has set this to{' '}
-                  <code>none</code>, so need to set it on the body.
+                  nearby text even if the target element has set{' '}
+                  <code>user-select: none</code>, so need to set it on the body
+                  and not the element.
                 </>
               }
               checked={userSelectNone}
@@ -261,9 +302,9 @@ export const App = () => {
             <OptionItemCheckbox
               label={
                 <>
-                  <code>-webkit-touch-callout: none</code>, to prevent the
-                  "context menu" from appearing on iOS long press of links
-                  because iOS doesn't support <code>conextmenu</code> events.
+                  <code>-webkit-touch-callout: none</code>, to prevent the iOS
+                  "context menu" from appearing on long press of links because
+                  iOS doesn't support <code>conextmenu</code> events.
                 </>
               }
               checked={webkitTouchCalloutNone}
@@ -343,12 +384,13 @@ export const App = () => {
           </OptionsContainer>
         )}
       </DemoOptionsContainer>
-
-      <ButtonDemo {...demoOptions} />
-      <LinkDemo {...demoOptions} />
-      {/* scroll events not fully supported by eventFrom */}
-      {/* <ScrollableDemo {...demoOptions} /> */}
-      <FormDemo {...demoOptions} />
+      <OptionsContext.Provider value={demoOptions}>
+        <ButtonDemo />
+        <LinkDemo />
+        {/* scroll events not fully supported by eventFrom */}
+        {/* <ScrollableDemo /> */}
+        <FormDemo />
+      </OptionsContext.Provider>
     </AppDiv>
   );
 };

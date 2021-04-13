@@ -1,9 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import { styled } from './stitches.config';
-
 import { useEventLog } from './useEventLog';
 import { EventLogUI } from './EventLogUI';
-import { DemoOptionsInterface } from './App';
+import { OptionsContext } from './App';
 
 const DemoContainer = styled('div', {
   paddingBottom: '20px',
@@ -98,34 +97,18 @@ const SubmitInput = styled('input', {
   },
 });
 
-export const ButtonDemo: React.VFC<DemoOptionsInterface> = ({
-  setMoveListeners,
-  preventDefaultOnAll,
-  touchActionNone,
-  webkitTapHighlightColorTransparent,
-  // userSelectNone,
-  webkitTouchCalloutNone,
-  contextMenuPreventDefault,
-  // draggableFalse,
-  showTimeSincePreviousEvent,
-  showEventCoordinates,
-  showPointerEvents,
-  showMouseEvents,
-  showTouchEvents,
-  showTimeSincePreviousPointerdown,
-  consoleLogEvents,
-}) => {
-  const { eventLog, eventListeners } = useEventLog({
-    setMoveListeners,
-    preventDefaultOnAll,
-    contextMenuPreventDefault,
-    consoleLogEvents,
-  });
+export const ButtonDemo: React.VFC = () => {
+  const {
+    touchActionNone,
+    webkitTapHighlightColorTransparent,
+    webkitTouchCalloutNone,
+  } = useContext(OptionsContext);
+  const { eventLog, eventListeners } = useEventLog();
   return (
     <DemoContainer id="button-demo">
       <TestButton
         {...eventListeners}
-        css={{
+        style={{
           touchAction: touchActionNone ? 'none' : undefined,
           WebkitTapHighlightColor: webkitTapHighlightColorTransparent
             ? 'transparent'
@@ -135,42 +118,19 @@ export const ButtonDemo: React.VFC<DemoOptionsInterface> = ({
       >
         Test Button
       </TestButton>
-      <EventLogUI
-        eventLog={eventLog}
-        showTimeSincePreviousEvent={showTimeSincePreviousEvent}
-        showTimeSincePreviousPointerdown={showTimeSincePreviousPointerdown}
-        showEventCoordinates={showEventCoordinates}
-        showPointerEvents={showPointerEvents}
-        showMouseEvents={showMouseEvents}
-        showTouchEvents={showTouchEvents}
-      />
+      <EventLogUI eventLog={eventLog} />
     </DemoContainer>
   );
 };
 
-export const LinkDemo: React.VFC<DemoOptionsInterface> = ({
-  setMoveListeners,
-  preventDefaultOnAll,
-  touchActionNone,
-  webkitTapHighlightColorTransparent,
-  // userSelectNone,
-  webkitTouchCalloutNone,
-  contextMenuPreventDefault,
-  draggableFalse,
-  showTimeSincePreviousEvent,
-  showEventCoordinates,
-  showPointerEvents,
-  showMouseEvents,
-  showTouchEvents,
-  showTimeSincePreviousPointerdown,
-  consoleLogEvents,
-}) => {
-  const { eventLog, eventListeners } = useEventLog({
-    setMoveListeners,
-    preventDefaultOnAll,
-    contextMenuPreventDefault,
-    consoleLogEvents,
-  });
+export const LinkDemo: React.VFC = () => {
+  const {
+    touchActionNone,
+    webkitTapHighlightColorTransparent,
+    webkitTouchCalloutNone,
+    draggableFalse,
+  } = useContext(OptionsContext);
+  const { eventLog, eventListeners } = useEventLog();
   return (
     <DemoContainer id="link-demo">
       <TestLinkContainer>
@@ -178,7 +138,7 @@ export const LinkDemo: React.VFC<DemoOptionsInterface> = ({
           {...eventListeners}
           href="#link-demo"
           draggable={draggableFalse ? false : undefined}
-          css={{
+          style={{
             touchAction: touchActionNone ? 'none' : undefined,
             WebkitTapHighlightColor: webkitTapHighlightColorTransparent
               ? 'transparent'
@@ -189,47 +149,23 @@ export const LinkDemo: React.VFC<DemoOptionsInterface> = ({
           Test link with href="#link-demo"
         </TestLink>
       </TestLinkContainer>
-      <EventLogUI
-        eventLog={eventLog}
-        showTimeSincePreviousEvent={showTimeSincePreviousEvent}
-        showTimeSincePreviousPointerdown={showTimeSincePreviousPointerdown}
-        showEventCoordinates={showEventCoordinates}
-        showPointerEvents={showPointerEvents}
-        showMouseEvents={showMouseEvents}
-        showTouchEvents={showTouchEvents}
-      />
+      <EventLogUI eventLog={eventLog} />
     </DemoContainer>
   );
 };
 
-export const ScrollableDemo: React.VFC<DemoOptionsInterface> = ({
-  setMoveListeners,
-  preventDefaultOnAll,
-  touchActionNone,
-  webkitTapHighlightColorTransparent,
-  // userSelectNone,
-  webkitTouchCalloutNone,
-  contextMenuPreventDefault,
-  // draggableFalse,
-  showTimeSincePreviousEvent,
-  showEventCoordinates,
-  showPointerEvents,
-  showMouseEvents,
-  showTouchEvents,
-  showTimeSincePreviousPointerdown,
-  consoleLogEvents,
-}) => {
-  const { eventLog, eventListeners } = useEventLog({
-    setMoveListeners,
-    preventDefaultOnAll,
-    contextMenuPreventDefault,
-    consoleLogEvents,
-  });
+export const ScrollableDemo: React.VFC = () => {
+  const {
+    touchActionNone,
+    webkitTapHighlightColorTransparent,
+    webkitTouchCalloutNone,
+  } = useContext(OptionsContext);
+  const { eventLog, eventListeners } = useEventLog();
   return (
     <DemoContainer id="scrollable-demo">
       <ScrollableContainer
         {...eventListeners}
-        css={{
+        style={{
           touchAction: touchActionNone ? 'none' : undefined,
           WebkitTapHighlightColor: webkitTapHighlightColorTransparent
             ? 'transparent'
@@ -247,48 +183,19 @@ export const ScrollableDemo: React.VFC<DemoOptionsInterface> = ({
           [],
         )}
       </ScrollableContainer>
-      <EventLogUI
-        eventLog={eventLog}
-        showTimeSincePreviousEvent={showTimeSincePreviousEvent}
-        showTimeSincePreviousPointerdown={showTimeSincePreviousPointerdown}
-        showEventCoordinates={showEventCoordinates}
-        showPointerEvents={showPointerEvents}
-        showMouseEvents={showMouseEvents}
-        showTouchEvents={showTouchEvents}
-      />
+      <EventLogUI eventLog={eventLog} />
     </DemoContainer>
   );
 };
 
-export const FormDemo: React.VFC<DemoOptionsInterface> = ({
-  setMoveListeners,
-  preventDefaultOnAll,
-  touchActionNone,
-  webkitTapHighlightColorTransparent,
-  // userSelectNone,
-  webkitTouchCalloutNone,
-  contextMenuPreventDefault,
-  // draggableFalse,
-  showTimeSincePreviousEvent,
-  showEventCoordinates,
-  showPointerEvents,
-  showMouseEvents,
-  showTouchEvents,
-  showTimeSincePreviousPointerdown,
-  consoleLogEvents,
-}) => {
-  const textInput = useEventLog({
-    setMoveListeners,
-    preventDefaultOnAll,
-    contextMenuPreventDefault,
-    consoleLogEvents,
-  });
-  const submitInput = useEventLog({
-    setMoveListeners,
-    preventDefaultOnAll,
-    contextMenuPreventDefault,
-    consoleLogEvents,
-  });
+export const FormDemo: React.VFC = () => {
+  const {
+    touchActionNone,
+    webkitTapHighlightColorTransparent,
+    webkitTouchCalloutNone,
+  } = useContext(OptionsContext);
+  const textInput = useEventLog();
+  const submitInput = useEventLog();
   return (
     <DemoContainer id="form-demo">
       <form onSubmit={(e) => e.preventDefault()}>
@@ -296,7 +203,7 @@ export const FormDemo: React.VFC<DemoOptionsInterface> = ({
           {...textInput.eventListeners}
           type="text"
           placeholder="Form demo"
-          css={{
+          style={{
             touchAction: touchActionNone ? 'none' : undefined,
             WebkitTapHighlightColor: webkitTapHighlightColorTransparent
               ? 'transparent'
@@ -308,7 +215,7 @@ export const FormDemo: React.VFC<DemoOptionsInterface> = ({
           {...submitInput.eventListeners}
           type="submit"
           value="Submit"
-          css={{
+          style={{
             touchAction: touchActionNone ? 'none' : undefined,
             WebkitTapHighlightColor: webkitTapHighlightColorTransparent
               ? 'transparent'
@@ -318,27 +225,9 @@ export const FormDemo: React.VFC<DemoOptionsInterface> = ({
         />
       </form>
       <FormHeader>Text input event log</FormHeader>
-      <EventLogUI
-        eventLog={textInput.eventLog}
-        height="150px"
-        showTimeSincePreviousEvent={showTimeSincePreviousEvent}
-        showTimeSincePreviousPointerdown={showTimeSincePreviousPointerdown}
-        showEventCoordinates={showEventCoordinates}
-        showPointerEvents={showPointerEvents}
-        showMouseEvents={showMouseEvents}
-        showTouchEvents={showTouchEvents}
-      />
+      <EventLogUI eventLog={textInput.eventLog} height="150px" />
       <FormHeader>Submit input event log</FormHeader>
-      <EventLogUI
-        eventLog={submitInput.eventLog}
-        height="150px"
-        showTimeSincePreviousEvent={showTimeSincePreviousEvent}
-        showTimeSincePreviousPointerdown={showTimeSincePreviousPointerdown}
-        showEventCoordinates={showEventCoordinates}
-        showPointerEvents={showPointerEvents}
-        showMouseEvents={showMouseEvents}
-        showTouchEvents={showTouchEvents}
-      />
+      <EventLogUI eventLog={submitInput.eventLog} height="150px" />
     </DemoContainer>
   );
 };

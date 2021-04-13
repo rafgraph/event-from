@@ -1,32 +1,59 @@
 import { Interactive } from 'react-interactive';
-import { SunIcon } from '@modulz/radix-icons';
 import { styled } from './stitches.config';
 
-interface InteractiveDarkModeButtonProps {
+interface InteractiveButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  children: React.ReactNode;
 }
-const InteractiveDarkModeButton: React.VFC<InteractiveDarkModeButtonProps> = ({
+const InteractiveButton: React.VFC<InteractiveButtonProps> = ({
   onClick,
   className,
-}) => {
-  return (
-    <Interactive as="button" className={className} onClick={onClick}>
-      <SunIcon width="30" height="30" />
-    </Interactive>
-  );
-};
-
-export const DarkModeButton = styled(InteractiveDarkModeButton, {
+  children,
+}) => (
+  <Interactive as="button" className={className} onClick={onClick}>
+    {children}
+  </Interactive>
+);
+export const ButtonBase = styled(InteractiveButton, {
   color: '$highContrast',
-  width: '30px',
-  height: '30px',
+  WebkitTapHighlightColor: 'transparent',
   '&.hover, &.active': {
     color: '$green',
   },
   '&.focusFromKey': {
     outline: '2px solid $colors$green',
     outlineOffset: '2px',
+  },
+});
+
+interface InteractiveCheckboxProps {
+  checked: boolean;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  disabled?: boolean;
+  className?: string;
+}
+const InteractiveCheckbox: React.VFC<InteractiveCheckboxProps> = ({
+  checked,
+  onChange,
+  disabled,
+  className,
+}) => (
+  <Interactive
+    as="input"
+    type="checkbox"
+    checked={checked}
+    onChange={onChange}
+    disabled={disabled}
+    className={className}
+  />
+);
+export const CheckboxBase = styled(InteractiveCheckbox, {
+  WebkitTapHighlightColor: 'transparent',
+  appearance: 'checkbox',
+  '&.focusFromKey': {
+    outline: '2px solid $colors$green',
+    outlineOffset: '1px',
   },
 });
 
@@ -52,11 +79,11 @@ const InteractiveLink: React.VFC<InteractiveLinkProps> = ({
     </Interactive>
   );
 };
-
 export const Link = styled(InteractiveLink, {
   color: '$highContrast',
   borderBottom: '2px dotted $colors$green',
   textDecoration: 'none',
+  WebkitTapHighlightColor: 'transparent',
   '&.hover, &.active': {
     borderBottomStyle: 'solid',
   },

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useContext } from 'react';
+import { OptionsContext } from './App';
 import { EventLogItem } from './useEventLog';
 import { EventCategory } from './useEventLog';
 import { styled } from './stitches.config';
@@ -58,25 +59,22 @@ const determineInfoType = (category: EventCategory, type: string) => {
 
 interface EventLogUIProps {
   eventLog: EventLogItem[];
-  showTimeSincePreviousEvent: boolean;
-  showTimeSincePreviousPointerdown: boolean;
-  showEventCoordinates: boolean;
-  showPointerEvents: boolean;
-  showMouseEvents: boolean;
-  showTouchEvents: boolean;
   height?: string;
 }
 
 export const EventLogUI: React.VFC<EventLogUIProps> = ({
   eventLog,
-  showTimeSincePreviousEvent,
-  showTimeSincePreviousPointerdown,
-  showEventCoordinates,
-  showPointerEvents,
-  showMouseEvents,
-  showTouchEvents,
   height,
 }) => {
+  const {
+    showTimeSincePreviousEvent,
+    showTimeSincePreviousPointerdown,
+    showEventCoordinates,
+    showPointerEvents,
+    showMouseEvents,
+    showTouchEvents,
+  } = useContext(OptionsContext);
+
   const eventLogEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -106,7 +104,6 @@ export const EventLogUI: React.VFC<EventLogUIProps> = ({
             yCoordinate,
           },
           idx,
-          arr,
         ) =>
           eventsToExclude.includes(category) ? null : (
             <EventLogLine

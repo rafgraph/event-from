@@ -1,6 +1,6 @@
 import { createCss } from '@stitches/react';
 
-export const { styled, theme, global: stitchesGlobal } = createCss({
+export const { styled, theme, global: createGlobalCss } = createCss({
   theme: {
     colors: {
       pageBackground: 'rgb(240,240,240)',
@@ -32,7 +32,7 @@ export const darkThemeClass = theme({
   },
 });
 
-export const globalStyles = stitchesGlobal({
+export const globalCss = createGlobalCss({
   'button, input': {
     all: 'unset',
   },
@@ -47,7 +47,9 @@ export const globalStyles = stitchesGlobal({
     textAlign: 'inherit',
     color: 'inherit',
     background: 'transparent',
-    WebkitTapHighlightColor: 'transparent',
+    // don't set WebkitTapHighlightColor globally b/c
+    // can't revert it to browser default in demos
+    // WebkitTapHighlightColor: 'transparent',
   },
   html: {
     height: '100%',
