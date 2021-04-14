@@ -194,6 +194,7 @@ export const ButtonDemo: React.VFC = () => {
           {...eventListeners}
           useExtendedTouchActive={riUseExtendedTouchActive}
           css={{
+            touchAction: touchActionNone ? 'none' : undefined,
             WebkitTapHighlightColor: webkitTapHighlightColorTransparent
               ? 'transparent'
               : undefined,
@@ -239,6 +240,7 @@ export const LinkDemo: React.VFC = () => {
             href="#link-demo"
             useExtendedTouchActive={riUseExtendedTouchActive}
             css={{
+              touchAction: touchActionNone ? 'none' : undefined,
               WebkitTapHighlightColor: webkitTapHighlightColorTransparent
                 ? 'transparent'
                 : undefined,
@@ -321,6 +323,7 @@ export const FormDemo: React.VFC = () => {
             useExtendedTouchActive={riUseExtendedTouchActive}
             placeholder="Form demo"
             css={{
+              touchAction: touchActionNone ? 'none' : undefined,
               WebkitTapHighlightColor: webkitTapHighlightColorTransparent
                 ? 'transparent'
                 : undefined,
@@ -346,6 +349,7 @@ export const FormDemo: React.VFC = () => {
             useExtendedTouchActive={riUseExtendedTouchActive}
             value="Submit"
             css={{
+              touchAction: touchActionNone ? 'none' : undefined,
               WebkitTapHighlightColor: webkitTapHighlightColorTransparent
                 ? 'transparent'
                 : undefined,
