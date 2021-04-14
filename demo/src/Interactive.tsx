@@ -1,5 +1,7 @@
 import { Interactive } from 'react-interactive';
-import { SunIcon } from '@modulz/radix-icons';
+import * as Checkbox from '@radix-ui/react-checkbox';
+import * as Label from '@radix-ui/react-label';
+import { SunIcon, CheckIcon } from '@radix-ui/react-icons';
 import { styled } from './stitches.config';
 
 interface InteractiveButtonProps {
@@ -30,31 +32,58 @@ export const ButtonBase = styled(InteractiveButton, {
 
 interface InteractiveCheckboxProps {
   checked: boolean;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  disabled?: boolean;
+  onCheckedChange: React.ChangeEventHandler<HTMLInputElement>;
   className?: string;
+  disabled?: boolean;
 }
+
 const InteractiveCheckbox: React.VFC<InteractiveCheckboxProps> = ({
   checked,
-  onChange,
-  disabled,
+  onCheckedChange,
   className,
+  disabled,
 }) => (
-  <Interactive
-    as="input"
-    type="checkbox"
+  <Checkbox.Root
     checked={checked}
-    onChange={onChange}
-    disabled={disabled}
+    onCheckedChange={onCheckedChange}
     className={className}
-  />
+    disabled={disabled}
+    as={Interactive}
+  >
+    <Checkbox.Indicator as={CheckIcon} />
+  </Checkbox.Root>
 );
+
 export const CheckboxBase = styled(InteractiveCheckbox, {
-  WebkitTapHighlightColor: 'transparent',
-  appearance: 'checkbox',
+  appearance: 'none',
+  backgroundColor: 'transparent',
+  boxShadow: 'inset 0 0 0 1px $colors$highContrast',
+  width: '15px',
+  height: '15px',
+  borderRadius: '2px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   '&.focusFromKey': {
-    outline: '2px solid $colors$green',
-    outlineOffset: '1px',
+    outline: 'none',
+    boxShadow: 'inset 0 0 0 1px $colors$green, 0 0 0 1px $colors$green',
+  },
+});
+
+export const LabelBase = styled(Label.Root, {
+  cursor: 'pointer',
+  WebkitTapHighlightColor: 'transparent',
+  // required because of radix checkbox bug: https://github.com/radix-ui/primitives/issues/605
+  '&>input': {
+    display: 'none',
+  },
+  variants: {
+    disabled: {
+      true: {
+        opacity: 0.5,
+        cursor: 'unset',
+      },
+    },
   },
 });
 

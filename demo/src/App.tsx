@@ -1,7 +1,13 @@
 import { useState, useEffect, useMemo, createContext } from 'react';
 import useDarkMode from 'use-dark-mode';
 import { styled, globalCss, darkThemeClass } from './stitches.config';
-import { Link, ButtonBase, CheckboxBase, DarkModeButton } from './Interactive';
+import {
+  Link,
+  ButtonBase,
+  CheckboxBase,
+  LabelBase,
+  DarkModeButton,
+} from './Interactive';
 import {
   ButtonDemo,
   LinkDemo,
@@ -52,24 +58,12 @@ const OptionSectionHeading = styled('div', {
 });
 
 const OptionItemContainer = styled('div', {
-  margin: '4px 0',
-});
-
-const OptionLabel = styled('label', {
-  cursor: 'pointer',
-  WebkitTapHighlightColor: 'transparent',
-  variants: {
-    disabled: {
-      true: {
-        opacity: 0.5,
-        cursor: 'unset',
-      },
-    },
-  },
+  margin: '8px 0',
 });
 
 const OptionCheckbox = styled(CheckboxBase, {
-  verticalAlign: 'middle',
+  verticalAlign: 'top',
+  marginTop: '2px',
   marginRight: '4px',
 });
 
@@ -77,24 +71,26 @@ interface OptionItemCheckboxProps {
   label: React.ReactNode;
   checked: boolean;
   disabled?: boolean;
-  update: React.Dispatch<React.SetStateAction<boolean>>;
+  setChecked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
   label,
   checked,
   disabled,
-  update,
+  setChecked,
 }) => (
   <OptionItemContainer>
-    <OptionLabel disabled={disabled}>
+    <LabelBase disabled={disabled}>
       <OptionCheckbox
         disabled={disabled}
         checked={checked}
-        onChange={() => update((prevState) => !prevState)}
+        onCheckedChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          setChecked(event.target.checked)
+        }
       />
       {label}
-    </OptionLabel>
+    </LabelBase>
   </OptionItemContainer>
 );
 
@@ -273,7 +269,7 @@ export const App = () => {
                 </>
               }
               checked={useReactInteractive}
-              update={updateUseReactInteractive}
+              setChecked={updateUseReactInteractive}
             />
             <OptionItemCheckbox
               label={
@@ -282,7 +278,7 @@ export const App = () => {
                 </>
               }
               checked={setMoveListeners}
-              update={updateSetMoveListeners}
+              setChecked={updateSetMoveListeners}
             />
             <OptionItemCheckbox
               label={
@@ -291,7 +287,7 @@ export const App = () => {
                 </>
               }
               checked={preventDefaultOnAll}
-              update={updatePreventDefaultOnAll}
+              setChecked={updatePreventDefaultOnAll}
             />
             <OptionItemCheckbox
               label={
@@ -303,12 +299,12 @@ export const App = () => {
                 </>
               }
               checked={touchActionNone}
-              update={updateTouchActionNone}
+              setChecked={updateTouchActionNone}
             />
             <OptionItemCheckbox
               label={<code>-webkit-tap-highlight-color: transparent</code>}
               checked={webkitTapHighlightColorTransparent}
-              update={updateWebkitTapHighlightColorTransparent}
+              setChecked={updateWebkitTapHighlightColorTransparent}
             />
             <OptionSectionHeading>
               Options to enable long press on touch devices:
@@ -324,7 +320,7 @@ export const App = () => {
                 </>
               }
               checked={riUseExtendedTouchActive}
-              update={updateInteractiveUseExtendedTouchActive}
+              setChecked={updateInteractiveUseExtendedTouchActive}
             />
             <OptionItemCheckbox
               disabled={useReactInteractive}
@@ -338,7 +334,7 @@ export const App = () => {
                 </>
               }
               checked={userSelectNone}
-              update={updateUserSelectNone}
+              setChecked={updateUserSelectNone}
             />
             <OptionItemCheckbox
               disabled={useReactInteractive}
@@ -350,7 +346,7 @@ export const App = () => {
                 </>
               }
               checked={contextMenuPreventDefault}
-              update={updateContextMenuPreventDefault}
+              setChecked={updateContextMenuPreventDefault}
             />
             <OptionItemCheckbox
               disabled={useReactInteractive}
@@ -362,7 +358,7 @@ export const App = () => {
                 </>
               }
               checked={webkitTouchCalloutNone}
-              update={updateWebkitTouchCalloutNone}
+              setChecked={updateWebkitTouchCalloutNone}
             />
             <OptionItemCheckbox
               disabled={useReactInteractive}
@@ -373,59 +369,59 @@ export const App = () => {
                 </>
               }
               checked={draggableFalse}
-              update={updateDraggableFalse}
+              setChecked={updateDraggableFalse}
             />
             <OptionSectionHeading>Event log options:</OptionSectionHeading>
             <OptionItemCheckbox
-              label={'show time (ms) since previous event'}
+              label={'Show time (ms) since previous event'}
               checked={showTimeSincePreviousEvent}
-              update={updateShowTimeSincePreviousEvent}
+              setChecked={updateShowTimeSincePreviousEvent}
             />
             <OptionItemCheckbox
               label={
                 <>
-                  show time (ms) since previous <code>pointerdown</code> event
+                  Show time (ms) since previous <code>pointerdown</code> event
                 </>
               }
               checked={showTimeSincePreviousPointerdown}
-              update={updateShowTimeSincePreviousPointerdown}
+              setChecked={updateShowTimeSincePreviousPointerdown}
             />
             <OptionItemCheckbox
               label={
                 <>
-                  show event coordinates: <code>clientX</code>,{' '}
+                  Show event coordinates: <code>clientX</code>,{' '}
                   <code>clientY</code>
                 </>
               }
               checked={showEventCoordinates}
-              update={updateShowEventCoordinates}
+              setChecked={updateShowEventCoordinates}
             />
             <OptionItemCheckbox
               label={
                 <>
-                  show <code>pointer</code> events
+                  Show <code>pointer</code> events
                 </>
               }
               checked={showPointerEvents}
-              update={updateShowPointerEvents}
+              setChecked={updateShowPointerEvents}
             />
             <OptionItemCheckbox
               label={
                 <>
-                  show <code>mouse</code> events
+                  Show <code>mouse</code> events
                 </>
               }
               checked={showMouseEvents}
-              update={updateShowMouseEvents}
+              setChecked={updateShowMouseEvents}
             />
             <OptionItemCheckbox
               label={
                 <>
-                  show <code>touch</code> events
+                  Show <code>touch</code> events
                 </>
               }
               checked={showTouchEvents}
-              update={updateShowTouchEvents}
+              setChecked={updateShowTouchEvents}
             />
             <OptionItemCheckbox
               label={
@@ -434,7 +430,7 @@ export const App = () => {
                 </>
               }
               checked={consoleLogEvents}
-              update={updateConsoleLogEvents}
+              setChecked={updateConsoleLogEvents}
             />
           </OptionsContainer>
         )}

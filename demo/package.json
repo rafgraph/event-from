@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@modulz/radix-icons": "^4.0.0",
+    "@radix-ui/react-checkbox": "^0.0.13",
+    "@radix-ui/react-icons": "^1.0.3",
+    "@radix-ui/react-label": "^0.0.11",
     "@stitches/react": "^0.1.5",
     "event-from": "^0.7.0",
     "react": "^17.0.2",
