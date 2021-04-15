@@ -239,7 +239,7 @@ export const App = () => {
 
   return (
     <AppDiv>
-      <H1 className={undefined}>
+      <H1>
         <span>Event From Demo</span>
         <DarkModeButton onClick={darkMode.toggle} />
       </H1>
