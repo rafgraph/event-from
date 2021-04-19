@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, createContext } from 'react';
+import React, { useState, useEffect, useMemo, createContext } from 'react';
+import { InteractiveStateChange } from 'react-interactive';
 import useDarkMode from 'use-dark-mode';
 import { styled, globalCss, darkThemeClass } from './stitches.config';
 import {
@@ -68,7 +69,11 @@ const OptionCheckbox = styled(CheckboxBase, {
 });
 
 interface OptionItemCheckboxProps {
-  label: React.ReactNode;
+  label:
+    | React.ReactNode
+    | ((arg: {
+        setDisableCheckbox: React.Dispatch<React.SetStateAction<boolean>>;
+      }) => React.ReactNode);
   checked: boolean;
   disabled?: boolean;
   setChecked: React.Dispatch<React.SetStateAction<boolean>>;
@@ -79,20 +84,24 @@ const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
   checked,
   disabled,
   setChecked,
-}) => (
-  <OptionItemContainer>
-    <LabelBase disabled={disabled}>
-      <OptionCheckbox
-        disabled={disabled}
-        checked={checked}
-        onCheckedChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          setChecked(event.target.checked)
-        }
-      />
-      {label}
-    </LabelBase>
-  </OptionItemContainer>
-);
+}) => {
+  const [disableCheckbox, setDisableCheckbox] = useState(false);
+
+  return (
+    <OptionItemContainer>
+      <LabelBase disabled={disabled}>
+        <OptionCheckbox
+          disabled={disabled || disableCheckbox}
+          checked={checked}
+          onCheckedChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setChecked(event.target.checked)
+          }
+        />
+        {typeof label === 'function' ? label({ setDisableCheckbox }) : label}
+      </LabelBase>
+    </OptionItemContainer>
+  );
+};
 
 interface DemoOptionsInterface {
   useReactInteractive: boolean;
@@ -259,15 +268,36 @@ export const App = () => {
         {showDemoOptions && (
           <OptionsContainer>
             <OptionItemCheckbox
-              label={
+              label={({ setDisableCheckbox }) => (
                 <>
                   Use{' '}
-                  <Link href="https://github.com/rafgraph/react-interactive">
+                  <Link
+                    href="https://github.com/rafgraph/react-interactive"
+                    onStateChange={({
+                      state,
+                      prevState,
+                    }: InteractiveStateChange) => {
+                      if (state.hover || state.active) {
+                        setDisableCheckbox(true);
+                      } else {
+                        prevState.active === 'touchActive'
+                          ? // fix for radix label bug https://github.com/radix-ui/primitives/issues/609
+                            // since can't stop propagation of click event to radix label
+                            // and touchActive is exited before click event is dispatched by the browser
+                            // so have to delay enabling checkbox until after the browser (potentially) dispatches click event
+                            window.setTimeout(
+                              () => setDisableCheckbox(false),
+                              500,
+                            )
+                          : setDisableCheckbox(false);
+                      }
+                    }}
+                  >
                     React Interactive
                   </Link>{' '}
                   for interactive elements in demo (button, link, input, etc)
                 </>
-              }
+              )}
               checked={useReactInteractive}
               setChecked={updateUseReactInteractive}
             />

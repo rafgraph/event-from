@@ -3,6 +3,7 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Label from '@radix-ui/react-label';
 import { SunIcon, CheckIcon } from '@radix-ui/react-icons';
 import { styled } from './stitches.config';
+import React from 'react';
 
 ////////////////////////////////////////
 
@@ -32,24 +33,26 @@ export const ButtonBase = styled(InteractiveButton, {
   },
 });
 
+////////////////////////////////////////
+
+// checkbox and label usage:
+// <LabelBase disabled={disabled}>
+//   <CheckboxBase
+//     disabled={disabled}
+//     checked={checked}
+//     onCheckedChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+//       setChecked(event.target.checked)
+//     }
+//   />
+//   Label text here
+//  </LabelBase>
+
 interface InteractiveCheckboxProps {
   checked: boolean;
   onCheckedChange: React.ChangeEventHandler<HTMLInputElement>;
   className?: string;
   disabled?: boolean;
 }
-
-////////////////////////////////////////
-
-// checkbox and label usage:
-// <LabelBase disabled={disabled}>
-//   <OptionCheckbox
-//     disabled={disabled}
-//     checked={checked}
-//     onCheckedChange={(event: React.ChangeEvent<HTMLInputElement>) => {...}}
-//   />
-//   Label text here
-//  </LabelBase>
 
 const InteractiveCheckbox: React.VFC<InteractiveCheckboxProps> = ({
   checked,
@@ -97,9 +100,11 @@ export const LabelBase = styled(InteractiveLabel, {
   cursor: 'pointer',
   WebkitTapHighlightColor: 'transparent',
   // style CheckboxBase (which renders a button) when label is hovered/active
-  '&.hover>button, &.active>button': {
-    color: '$green',
+  '&.hover>button:not(.disabled), &.active>button:not(.disabled)': {
     boxShadow: 'inset 0 0 0 1px $colors$green, 0 0 0 1px $colors$green',
+  },
+  '&.active>button:not(.disabled)': {
+    color: '$green',
   },
   '&.disabled': {
     opacity: 0.5,
@@ -113,26 +118,9 @@ export const LabelBase = styled(InteractiveLabel, {
 
 ////////////////////////////////////////
 
-interface InteractiveLinkProps {
-  href: string;
-  className?: string;
-  children: React.ReactNode;
-}
-const InteractiveLink: React.VFC<InteractiveLinkProps> = ({
-  href,
-  className,
-  children,
-}) => {
+const InteractiveLink: React.VFC<InteractiveExtendableProps<'a'>> = (props) => {
   return (
-    <Interactive
-      as="a"
-      href={href}
-      className={className}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </Interactive>
+    <Interactive {...props} as="a" target="_blank" rel="noopener noreferrer" />
   );
 };
 export const Link = styled(InteractiveLink, {
