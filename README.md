@@ -8,6 +8,7 @@ Determine if a browser event was caused by `mouse`, `touch`, or `key` input. Can
 - Determine if `focus` was initiated from the keyboard (to know when to add focus styles).
 - Determining if a `click` event was from `mouse`, `touch`, or `key` input.
 - And anything else where knowing the type of user interaction that generated the event is helpful.
+- If you're using React you may be interested in [React Interactive](https://github.com/rafgraph/react-interactive), which uses Event From under the hood.
 
 ---
 
