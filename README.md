@@ -6,13 +6,15 @@ Determine if a browser event was caused by `mouse`, `touch`, or `key` input. Can
 
 - Ignore `mouse` events caused by `touch` input.
 - Determine if `focus` was initiated from the keyboard (to know when to add focus styles).
-- Determining if a `click` event was from `mouse`, `touch`, or `key` input.
+- Determine if a `click` event was from `mouse`, `touch`, or `key` input.
 - And anything else where knowing the type of user interaction that generated the event is helpful.
 - If you're using React you may be interested in [React Interactive](https://github.com/rafgraph/react-interactive), which uses Event From under the hood.
 
 ---
 
-**[Live demo app](https://event-from.rafgraph.dev)**, code in the `/demo` folder
+### [Live demo app for Event From](https://event-from.rafgraph.dev)
+
+Code is in the [`/demo`](/demo) folder.
 
 ---
 
@@ -26,7 +28,8 @@ import { eventFrom } from 'event-from';
 const handleEvent = (event) => {
   // call eventFrom in the event handler and pass in the event
   // eventFrom will return 1 of 3 strings: 'mouse' | 'touch' | 'key'
-  eventFrom(event);
+  const eventFromValue = eventFrom(event);
+  // ...your logic using the eventFromValue
 };
 ```
 
@@ -111,7 +114,7 @@ const element = document.getElementById('focus-example');
 element.addEventListener('focus', handleFocusEvent, false);
 
 // somewhere in your code where you want to call focus on the element
-// and have it be treated as an event from 'key' input
+// and have it be treated as an event from 'key' input,
 // now the call to eventFrom(e) in handleFocusEvent will return 'key'
 setEventFrom('key');
 element.focus();
