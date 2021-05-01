@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useMemo, createContext } from 'react';
+import { useState, useEffect, useMemo, createContext } from 'react';
 import { InteractiveStateChange } from 'react-interactive';
-import useDarkMode from 'use-dark-mode';
-import { styled, globalCss, darkThemeClass } from './stitches.config';
-import {
-  Link,
-  ButtonBase,
-  CheckboxBase,
-  LabelBase,
-  DarkModeButton,
-} from './Interactive';
+import { styled, globalCss } from './stitches.config';
+import { DarkModeButton } from './ui/DarkModeButton';
+import { GitHubIconLink } from './ui/GitHubIconLink';
+import { Link } from './ui/Link';
+import { Button } from './ui/Button';
+import { OptionCheckboxAndLabel } from './ui/OptionCheckboxAndLabel';
 import {
   ButtonDemo,
   LinkDemo,
@@ -18,90 +15,53 @@ import {
 
 const AppDiv = styled('div', {
   maxWidth: '700px',
-  padding: '14px 15px 25px',
+  padding: '12px 15px 25px',
   margin: '0 auto',
+});
+
+const HeaderContainer = styled('header', {
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginBottom: '18px',
 });
 
 const H1 = styled('h1', {
   fontSize: '26px',
-  display: 'flex',
+  marginRight: '16px',
+});
+
+const HeaderIconContainer = styled('span', {
+  width: '78px',
+  display: 'inline-flex',
   justifyContent: 'space-between',
-  marginBottom: '2px',
+  gap: '10px',
 });
 
 const InfoContainer = styled('p', {
-  padding: '10px 0',
+  paddingBottom: '12px',
   borderBottom: '1px dotted $colors$lowContrast',
 });
 
 const DemoOptionsContainer = styled('div', {
+  padding: '10px 0 14px',
   borderBottom: '1px dotted $colors$lowContrast',
-  '& code': {
-    backgroundColor: '$backgroundContrast',
-    padding: '0 5px',
-    borderRadius: '5px',
-  },
 });
 
-const DemoOptionsButton = styled(ButtonBase, {
+const DemoOptionsButton = styled(Button, {
   display: 'block',
-  margin: '10px 0',
   fontSize: '20px',
+  padding: '0 1px',
+  margin: '0 -1px',
 });
 
 const OptionsContainer = styled('div', {
-  paddingBottom: '6px',
+  marginTop: '12px',
 });
 
 const OptionSectionHeading = styled('div', {
   margin: '14px 0 6px',
   fontWeight: '600',
 });
-
-const OptionItemContainer = styled('div', {
-  margin: '8px 0',
-});
-
-const OptionCheckbox = styled(CheckboxBase, {
-  verticalAlign: 'top',
-  marginTop: '2px',
-  marginRight: '4px',
-});
-
-interface OptionItemCheckboxProps {
-  label:
-    | React.ReactNode
-    | ((arg: {
-        setDisableCheckbox: React.Dispatch<React.SetStateAction<boolean>>;
-      }) => React.ReactNode);
-  checked: boolean;
-  disabled?: boolean;
-  setChecked: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const OptionItemCheckbox: React.VFC<OptionItemCheckboxProps> = ({
-  label,
-  checked,
-  disabled,
-  setChecked,
-}) => {
-  const [disableCheckbox, setDisableCheckbox] = useState(false);
-
-  return (
-    <OptionItemContainer>
-      <LabelBase disabled={disabled}>
-        <OptionCheckbox
-          disabled={disabled || disableCheckbox}
-          checked={checked}
-          onCheckedChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setChecked(event.target.checked)
-          }
-        />
-        {typeof label === 'function' ? label({ setDisableCheckbox }) : label}
-      </LabelBase>
-    </OptionItemContainer>
-  );
-};
 
 interface DemoOptionsInterface {
   useReactInteractive: boolean;
@@ -145,10 +105,6 @@ export const OptionsContext = createContext<DemoOptionsInterface>({
 
 export const App = () => {
   globalCss();
-
-  const darkMode = useDarkMode(undefined, {
-    classNameDark: darkThemeClass,
-  });
 
   const [showDemoOptions, updateShowDemoOptions] = useState(false);
 
@@ -248,15 +204,18 @@ export const App = () => {
 
   return (
     <AppDiv>
-      <H1>
-        <span>Event From Demo</span>
-        <DarkModeButton onClick={darkMode.toggle} />
-      </H1>
-      <Link type="lowContrast" href="https://github.com/rafgraph/event-from">
-        https://github.com/rafgraph/event-from
-      </Link>
+      <HeaderContainer>
+        <H1>Event From Demo</H1>
+        <HeaderIconContainer>
+          <DarkModeButton />
+          <GitHubIconLink
+            href="https://github.com/rafgraph/event-from"
+            title="GitHub repository for Event From"
+          />
+        </HeaderIconContainer>
+      </HeaderContainer>
       <InfoContainer>
-        Some buttons, links, etc with event listeners and logs to demonstrate{' '}
+        Some elements with event listeners and logs to demonstrate{' '}
         <code>eventFrom</code>.
       </InfoContainer>
       <DemoOptionsContainer>
@@ -267,7 +226,7 @@ export const App = () => {
         </DemoOptionsButton>
         {showDemoOptions && (
           <OptionsContainer>
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={({ setDisableCheckbox }) => (
                 <>
                   Use{' '}
@@ -301,7 +260,7 @@ export const App = () => {
               checked={useReactInteractive}
               setChecked={updateUseReactInteractive}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Set <code>move</code> event listeners in demo
@@ -310,7 +269,7 @@ export const App = () => {
               checked={setMoveListeners}
               setChecked={updateSetMoveListeners}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Call <code>preventDefault()</code> on all events in demo
@@ -319,7 +278,7 @@ export const App = () => {
               checked={preventDefaultOnAll}
               setChecked={updatePreventDefaultOnAll}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   <code>touch-action: none</code>, set on the element, prevents
@@ -331,7 +290,7 @@ export const App = () => {
               checked={touchActionNone}
               setChecked={updateTouchActionNone}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={<code>-webkit-tap-highlight-color: transparent</code>}
               checked={webkitTapHighlightColorTransparent}
               setChecked={updateWebkitTapHighlightColorTransparent}
@@ -339,7 +298,7 @@ export const App = () => {
             <OptionSectionHeading>
               Options to enable long press on touch devices:
             </OptionSectionHeading>
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               disabled={!useReactInteractive}
               label={
                 <>
@@ -352,7 +311,7 @@ export const App = () => {
               checked={riUseExtendedTouchActive}
               setChecked={updateInteractiveUseExtendedTouchActive}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               disabled={useReactInteractive}
               label={
                 <>
@@ -366,7 +325,7 @@ export const App = () => {
               checked={userSelectNone}
               setChecked={updateUserSelectNone}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               disabled={useReactInteractive}
               label={
                 <>
@@ -378,7 +337,7 @@ export const App = () => {
               checked={contextMenuPreventDefault}
               setChecked={updateContextMenuPreventDefault}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               disabled={useReactInteractive}
               label={
                 <>
@@ -390,7 +349,7 @@ export const App = () => {
               checked={webkitTouchCalloutNone}
               setChecked={updateWebkitTouchCalloutNone}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               disabled={useReactInteractive}
               label={
                 <>
@@ -402,12 +361,12 @@ export const App = () => {
               setChecked={updateDraggableFalse}
             />
             <OptionSectionHeading>Event log options:</OptionSectionHeading>
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={'Show time (ms) since previous event'}
               checked={showTimeSincePreviousEvent}
               setChecked={updateShowTimeSincePreviousEvent}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Show time (ms) since previous <code>pointerdown</code> event
@@ -416,7 +375,7 @@ export const App = () => {
               checked={showTimeSincePreviousPointerdown}
               setChecked={updateShowTimeSincePreviousPointerdown}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Show event coordinates: <code>clientX</code>,{' '}
@@ -426,7 +385,7 @@ export const App = () => {
               checked={showEventCoordinates}
               setChecked={updateShowEventCoordinates}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Show <code>pointer</code> events
@@ -435,7 +394,7 @@ export const App = () => {
               checked={showPointerEvents}
               setChecked={updateShowPointerEvents}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Show <code>mouse</code> events
@@ -444,7 +403,7 @@ export const App = () => {
               checked={showMouseEvents}
               setChecked={updateShowMouseEvents}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   Show <code>touch</code> events
@@ -453,7 +412,7 @@ export const App = () => {
               checked={showTouchEvents}
               setChecked={updateShowTouchEvents}
             />
-            <OptionItemCheckbox
+            <OptionCheckboxAndLabel
               label={
                 <>
                   <code>console.log</code> all events

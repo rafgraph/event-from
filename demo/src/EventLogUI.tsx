@@ -8,7 +8,7 @@ const EventLogContainer = styled('div', {
   height: '300px',
   padding: '0 5px',
   border: '1px solid $colors$highContrast',
-  overflow: 'scroll',
+  overflowY: 'scroll',
 });
 
 const EventLogLine = styled('code', {
@@ -26,8 +26,8 @@ const InfoType = styled('span', {
   variants: {
     type: {
       click: { color: '$blue' },
-      pointer: { color: '$green' },
-      mouse: { color: '$purple' },
+      pointer: { color: '$purple' },
+      mouse: { color: '$green' },
       touch: { color: '$orange' },
       key: { color: '$yellow' },
       focus: { color: '$blueGreen' },

@@ -1,13 +1,13 @@
 import { useMemo, useContext } from 'react';
-import { Interactive, InteractiveExtendableProps } from 'react-interactive';
+import { Interactive } from 'react-interactive';
 import { styled, CSS } from './stitches.config';
 import { useEventLog } from './useEventLog';
 import { EventLogUI } from './EventLogUI';
 import { OptionsContext } from './App';
 
 const DemoContainer = styled('div', {
-  paddingBottom: '20px',
-  margin: '20px 0',
+  paddingBottom: '30px',
+  margin: '26px 0',
   borderBottom: '1px dotted $colors$lowContrast',
 });
 
@@ -22,18 +22,14 @@ const DemoButtonSharedStyle: CSS = {
   border: '1px solid $colors$highContrast',
 };
 
-const InteractiveButton: React.VFC<InteractiveExtendableProps<'button'>> = (
-  props,
-) => <Interactive {...props} as="button" />;
-
-const DemoButtonInteractive = styled(InteractiveButton, {
+const DemoButtonInteractive = styled(Interactive.Button, {
   ...DemoButtonSharedStyle,
   '&.hover, &.active': {
     color: '$green',
     borderColor: '$green',
   },
   '&.focusFromKey': {
-    outline: '2px solid $colors$green',
+    outline: '2px solid $colors$purple',
     outlineOffset: '2px',
   },
 });
@@ -44,8 +40,8 @@ const DemoButtonRegular = styled('button', {
     color: '$green',
     borderColor: '$green',
   },
-  '&:focus': {
-    outline: '2px solid $colors$green',
+  '&:focus-visible': {
+    outline: '2px solid $colors$purple',
     outlineOffset: '2px',
   },
 });
@@ -56,20 +52,19 @@ const DemoLinkContainer = styled('div', {
 
 const DemoLinkSharedStyle: CSS = {
   fontSize: '24px',
+  textDecorationLine: 'underline',
+  textDecorationThickness: 'from-font',
+  padding: '0 1px',
+  margin: '0 -1px',
 };
 
-const InteractiveLink: React.VFC<InteractiveExtendableProps<'a'>> = (props) => (
-  <Interactive {...props} as="a" />
-);
-
-const DemoLinkInteractive = styled(InteractiveLink, {
+const DemoLinkInteractive = styled(Interactive.A, {
   ...DemoLinkSharedStyle,
   '&.hover, &.active': {
     color: '$green',
-    borderColor: '$green',
   },
   '&.focusFromKey': {
-    outline: '2px solid $colors$green',
+    outline: '2px solid $colors$purple',
     outlineOffset: '2px',
   },
 });
@@ -78,10 +73,9 @@ const DemoLinkRegular = styled('a', {
   ...DemoLinkSharedStyle,
   '&:hover, &:active': {
     color: '$green',
-    borderColor: '$green',
   },
-  '&:focus': {
-    outline: '2px solid $colors$green',
+  '&:focus-visible': {
+    outline: '2px solid $colors$purple',
     outlineOffset: '2px',
   },
 });
@@ -108,29 +102,26 @@ const DemoTextInputSharedStyle: CSS = {
   width: '100%',
   fontSize: '24px',
   border: '1px solid $colors$highContrast',
-  padding: '2px 4px',
+  padding: '2px 5px',
 };
 
-const InteractiveTextInput: React.VFC<InteractiveExtendableProps<'input'>> = (
-  props,
-) => <Interactive {...props} as="input" type="text" />;
-
-const DemoTextInputInteractive = styled(InteractiveTextInput, {
+const DemoTextInputInteractive = styled(Interactive.Input, {
   ...DemoTextInputSharedStyle,
   '&.hover, &.active': {
-    color: '$green',
     borderColor: '$green',
   },
   '&.focus': {
     outline: '2px solid $colors$green',
     outlineOffset: '-1px',
   },
+  '&.focusFromKey': {
+    outline: '2px solid $colors$purple',
+  },
 });
 
 const DemoTextInputRegular = styled('input', {
   ...DemoTextInputSharedStyle,
   '&:hover, &:active': {
-    color: '$green',
     borderColor: '$green',
   },
   '&:focus': {
@@ -139,7 +130,7 @@ const DemoTextInputRegular = styled('input', {
   },
 });
 
-const DemoSubmitInputSharedStyle: CSS = {
+const DemoSubmitButtonSharedStyle: CSS = {
   display: 'block',
   width: '100%',
   height: '44px',
@@ -150,30 +141,26 @@ const DemoSubmitInputSharedStyle: CSS = {
   border: '1px solid $colors$highContrast',
 };
 
-const InteractiveSubmitInput: React.VFC<InteractiveExtendableProps<'input'>> = (
-  props,
-) => <Interactive {...props} as="input" type="submit" />;
-
-const DemoSubmitInputInteractive = styled(InteractiveSubmitInput, {
-  ...DemoSubmitInputSharedStyle,
+const DemoSubmitButtonInteractive = styled(Interactive.Button, {
+  ...DemoSubmitButtonSharedStyle,
   '&.hover, &.active': {
     color: '$green',
     borderColor: '$green',
   },
   '&.focusFromKey': {
-    outline: '2px solid $colors$green',
+    outline: '2px solid $colors$purple',
     outlineOffset: '2px',
   },
 });
 
-const DemoSubmitInputRegular = styled('input', {
-  ...DemoSubmitInputSharedStyle,
+const DemoSubmitButtonRegular = styled('button', {
+  ...DemoSubmitButtonSharedStyle,
   '&:hover, &:active': {
     color: '$green',
     borderColor: '$green',
   },
-  '&:focus': {
-    outline: '2px solid $colors$green',
+  '&:focus-visible': {
+    outline: '2px solid $colors$purple',
     outlineOffset: '2px',
   },
 });
@@ -313,7 +300,7 @@ export const FormDemo: React.VFC = () => {
     webkitTouchCalloutNone,
   } = useContext(OptionsContext);
   const textInput = useEventLog();
-  const submitInput = useEventLog();
+  const submitButton = useEventLog();
   return (
     <DemoContainer id="form-demo">
       <form onSubmit={(e) => e.preventDefault()}>
@@ -321,6 +308,7 @@ export const FormDemo: React.VFC = () => {
           <DemoTextInputInteractive
             {...textInput.eventListeners}
             useExtendedTouchActive={riUseExtendedTouchActive}
+            type="text"
             placeholder="Form demo"
             css={{
               touchAction: touchActionNone ? 'none' : undefined,
@@ -344,22 +332,23 @@ export const FormDemo: React.VFC = () => {
           />
         )}
         {useReactInteractive ? (
-          <DemoSubmitInputInteractive
-            {...submitInput.eventListeners}
+          <DemoSubmitButtonInteractive
+            {...submitButton.eventListeners}
             useExtendedTouchActive={riUseExtendedTouchActive}
-            value="Submit"
+            type="submit"
             css={{
               touchAction: touchActionNone ? 'none' : undefined,
               WebkitTapHighlightColor: webkitTapHighlightColorTransparent
                 ? 'transparent'
                 : undefined,
             }}
-          />
+          >
+            Submit
+          </DemoSubmitButtonInteractive>
         ) : (
-          <DemoSubmitInputRegular
-            {...submitInput.eventListeners}
+          <DemoSubmitButtonRegular
+            {...submitButton.eventListeners}
             type="submit"
-            value="Submit"
             css={{
               touchAction: touchActionNone ? 'none' : undefined,
               WebkitTapHighlightColor: webkitTapHighlightColorTransparent
@@ -367,13 +356,15 @@ export const FormDemo: React.VFC = () => {
                 : undefined,
               WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
             }}
-          />
+          >
+            Submit
+          </DemoSubmitButtonRegular>
         )}
       </form>
       <FormHeader>Text input event log</FormHeader>
       <EventLogUI eventLog={textInput.eventLog} height="150px" />
       <FormHeader>Submit input event log</FormHeader>
-      <EventLogUI eventLog={submitInput.eventLog} height="150px" />
+      <EventLogUI eventLog={submitButton.eventLog} height="150px" />
     </DemoContainer>
   );
 };
