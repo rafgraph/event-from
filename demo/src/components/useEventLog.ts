@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useContext } from 'react';
 import { eventFrom, EventFromInput } from 'event-from';
-import { OptionsContext } from './App';
+import { OptionsContext } from '../App';
 
 export type EventCategory =
   | 'click'

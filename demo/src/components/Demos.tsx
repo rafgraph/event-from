@@ -1,9 +1,9 @@
 import { useMemo, useContext } from 'react';
 import { Interactive } from 'react-interactive';
-import { styled, CSS } from './stitches.config';
+import { styled, CSS } from '../stitches.config';
 import { useEventLog } from './useEventLog';
-import { EventLogUI } from './EventLogUI';
-import { OptionsContext } from './App';
+import { EventLogUI } from './EventLog';
+import { OptionsContext } from '../App';
 
 const DemoContainer = styled('div', {
   paddingBottom: '30px',
@@ -174,32 +174,27 @@ export const ButtonDemo: React.VFC = () => {
     webkitTouchCalloutNone,
   } = useContext(OptionsContext);
   const { eventLog, eventListeners } = useEventLog();
+
+  const css: CSS = {
+    touchAction: touchActionNone ? 'none' : undefined,
+    WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+      ? 'transparent'
+      : undefined,
+    WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+  };
+
   return (
     <DemoContainer id="button-demo">
       {useReactInteractive ? (
         <DemoButtonInteractive
           {...eventListeners}
           useExtendedTouchActive={riUseExtendedTouchActive}
-          css={{
-            touchAction: touchActionNone ? 'none' : undefined,
-            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-              ? 'transparent'
-              : undefined,
-          }}
+          css={css}
         >
           Test Button
         </DemoButtonInteractive>
       ) : (
-        <DemoButtonRegular
-          {...eventListeners}
-          css={{
-            touchAction: touchActionNone ? 'none' : undefined,
-            WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-              ? 'transparent'
-              : undefined,
-            WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-          }}
-        >
+        <DemoButtonRegular {...eventListeners} css={css}>
           Test Button
         </DemoButtonRegular>
       )}
@@ -218,20 +213,25 @@ export const LinkDemo: React.VFC = () => {
     draggableFalse,
   } = useContext(OptionsContext);
   const { eventLog, eventListeners } = useEventLog();
+
+  const css: CSS = {
+    touchAction: touchActionNone ? 'none' : undefined,
+    WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+      ? 'transparent'
+      : undefined,
+    WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+  };
+
   return (
     <DemoContainer id="link-demo">
       <DemoLinkContainer>
         {useReactInteractive ? (
           <DemoLinkInteractive
             {...eventListeners}
-            href="#link-demo"
             useExtendedTouchActive={riUseExtendedTouchActive}
-            css={{
-              touchAction: touchActionNone ? 'none' : undefined,
-              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-                ? 'transparent'
-                : undefined,
-            }}
+            href="#link-demo"
+            draggable={draggableFalse ? false : undefined}
+            css={css}
           >
             Test link with href="#link-demo"
           </DemoLinkInteractive>
@@ -240,13 +240,7 @@ export const LinkDemo: React.VFC = () => {
             {...eventListeners}
             href="#link-demo"
             draggable={draggableFalse ? false : undefined}
-            css={{
-              touchAction: touchActionNone ? 'none' : undefined,
-              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-                ? 'transparent'
-                : undefined,
-              WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-            }}
+            css={css}
           >
             Test link with href="#link-demo"
           </DemoLinkRegular>
@@ -301,6 +295,15 @@ export const FormDemo: React.VFC = () => {
   } = useContext(OptionsContext);
   const textInput = useEventLog();
   const submitButton = useEventLog();
+
+  const css: CSS = {
+    touchAction: touchActionNone ? 'none' : undefined,
+    WebkitTapHighlightColor: webkitTapHighlightColorTransparent
+      ? 'transparent'
+      : undefined,
+    WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
+  };
+
   return (
     <DemoContainer id="form-demo">
       <form onSubmit={(e) => e.preventDefault()}>
@@ -310,25 +313,14 @@ export const FormDemo: React.VFC = () => {
             useExtendedTouchActive={riUseExtendedTouchActive}
             type="text"
             placeholder="Form demo"
-            css={{
-              touchAction: touchActionNone ? 'none' : undefined,
-              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-                ? 'transparent'
-                : undefined,
-            }}
+            css={css}
           />
         ) : (
           <DemoTextInputRegular
             {...textInput.eventListeners}
             type="text"
             placeholder="Form demo"
-            css={{
-              touchAction: touchActionNone ? 'none' : undefined,
-              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-                ? 'transparent'
-                : undefined,
-              WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-            }}
+            css={css}
           />
         )}
         {useReactInteractive ? (
@@ -336,12 +328,7 @@ export const FormDemo: React.VFC = () => {
             {...submitButton.eventListeners}
             useExtendedTouchActive={riUseExtendedTouchActive}
             type="submit"
-            css={{
-              touchAction: touchActionNone ? 'none' : undefined,
-              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-                ? 'transparent'
-                : undefined,
-            }}
+            css={css}
           >
             Submit
           </DemoSubmitButtonInteractive>
@@ -349,13 +336,7 @@ export const FormDemo: React.VFC = () => {
           <DemoSubmitButtonRegular
             {...submitButton.eventListeners}
             type="submit"
-            css={{
-              touchAction: touchActionNone ? 'none' : undefined,
-              WebkitTapHighlightColor: webkitTapHighlightColorTransparent
-                ? 'transparent'
-                : undefined,
-              WebkitTouchCallout: webkitTouchCalloutNone ? 'none' : undefined,
-            }}
+            css={css}
           >
             Submit
           </DemoSubmitButtonRegular>

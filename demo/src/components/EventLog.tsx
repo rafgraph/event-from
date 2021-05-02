@@ -1,8 +1,7 @@
 import { useEffect, useRef, useContext } from 'react';
-import { OptionsContext } from './App';
-import { EventLogItem } from './useEventLog';
-import { EventCategory } from './useEventLog';
-import { styled } from './stitches.config';
+import { OptionsContext } from '../App';
+import { EventLogItem, EventCategory } from './useEventLog';
+import { styled } from '../stitches.config';
 
 const EventLogContainer = styled('div', {
   height: '300px',

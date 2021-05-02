@@ -11,7 +11,7 @@ import {
   LinkDemo,
   // ScrollableDemo,
   FormDemo,
-} from './Demos';
+} from './components/Demos';
 
 const AppContainer = styled('div', {
   maxWidth: '700px',
@@ -135,9 +135,6 @@ export const App = () => {
   // when using react-interactive ensure the the following are set to false
   if (useReactInteractive) {
     userSelectNone && updateUserSelectNone(false);
-    contextMenuPreventDefault && updateContextMenuPreventDefault(false);
-    webkitTouchCalloutNone && updateWebkitTouchCalloutNone(false);
-    draggableFalse && updateDraggableFalse(false);
   }
 
   // event log options
@@ -299,20 +296,16 @@ export const App = () => {
               Options to enable long press on touch devices:
             </OptionSectionHeading>
             <OptionCheckboxAndLabel
-              disabled={!useReactInteractive}
               label={
                 <>
-                  React Interactive's <code>useExtendedTouchActive</code>, note
-                  that when using React Interactive the below options are
-                  disabled because they are implemented by React Interactive
-                  when <code>useExtendedTouchActive</code> is true.
+                  React Interactive's <code>useExtendedTouchActive</code>.
                 </>
               }
               checked={riUseExtendedTouchActive}
               setChecked={updateInteractiveUseExtendedTouchActive}
+              disabled={!useReactInteractive}
             />
             <OptionCheckboxAndLabel
-              disabled={useReactInteractive}
               label={
                 <>
                   <code>user-select: none</code>, set on the{' '}
@@ -320,13 +313,20 @@ export const App = () => {
                   nearby text even if the target element has set{' '}
                   <code>user-select: none</code>, so need to set it on the body
                   and not the element.
+                  {useReactInteractive && (
+                    <>
+                      {' '}
+                      This option is disabled when using React Interactive as it
+                      is implemented by <code>useExtendedTouchActive</code>.
+                    </>
+                  )}
                 </>
               }
               checked={userSelectNone}
               setChecked={updateUserSelectNone}
+              disabled={useReactInteractive}
             />
             <OptionCheckboxAndLabel
-              disabled={useReactInteractive}
               label={
                 <>
                   <code>contextmenu</code> event <code>preventDefault()</code>,
@@ -338,19 +338,17 @@ export const App = () => {
               setChecked={updateContextMenuPreventDefault}
             />
             <OptionCheckboxAndLabel
-              disabled={useReactInteractive}
               label={
                 <>
                   <code>-webkit-touch-callout: none</code>, to prevent the iOS
                   "context menu" from appearing on long press of links because
-                  iOS doesn't support <code>conextmenu</code> events.
+                  iOS doesn't support <code>contextmenu</code> events.
                 </>
               }
               checked={webkitTouchCalloutNone}
               setChecked={updateWebkitTouchCalloutNone}
             />
             <OptionCheckboxAndLabel
-              disabled={useReactInteractive}
               label={
                 <>
                   <code>draggable="false"</code>, to prevent from dragging links
