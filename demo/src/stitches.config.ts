@@ -10,7 +10,7 @@ const stitchesConfig = createCss({
       red: 'hsl(0,100%,50%)',
       orange: 'hsl(30,100%,50%)',
       yellow: 'hsl(51,100%,40%)',
-      green: 'hsl(120,100%,30%)',
+      green: 'hsl(120,100%,33%)', // same as rgb(0,168,0)
       blueGreen: 'hsl(180,100%,35%)',
       blue: 'hsl(240,100%,50%)',
       purple: 'hsl(270,100%,60%)',
@@ -60,6 +60,7 @@ export const globalCss = createGlobalCss({
     wordBreak: 'inherit',
     color: 'inherit',
     background: 'transparent',
+    outline: 'none',
     // don't set WebkitTapHighlightColor globally b/c
     // can't revert it to browser default in demos
     // WebkitTapHighlightColor: 'transparent',

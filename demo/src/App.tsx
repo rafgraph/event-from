@@ -13,7 +13,7 @@ import {
   FormDemo,
 } from './Demos';
 
-const AppDiv = styled('div', {
+const AppContainer = styled('div', {
   maxWidth: '700px',
   padding: '12px 15px 25px',
   margin: '0 auto',
@@ -34,7 +34,7 @@ const HeaderIconContainer = styled('span', {
   width: '78px',
   display: 'inline-flex',
   justifyContent: 'space-between',
-  gap: '10px',
+  gap: '12px',
 });
 
 const InfoContainer = styled('p', {
@@ -203,7 +203,7 @@ export const App = () => {
   }, [userSelectNone]);
 
   return (
-    <AppDiv>
+    <AppContainer>
       <HeaderContainer>
         <H1>Event From Demo</H1>
         <HeaderIconContainer>
@@ -431,6 +431,6 @@ export const App = () => {
         {/* <ScrollableDemo /> */}
         <FormDemo />
       </OptionsContext.Provider>
-    </AppDiv>
+    </AppContainer>
   );
 };

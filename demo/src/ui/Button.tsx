@@ -3,7 +3,6 @@ import { styled } from '../stitches.config';
 
 export const Button = styled(Interactive.Button, {
   color: '$highContrast',
-  outline: 'none',
   WebkitTapHighlightColor: 'transparent', // required here because can't set globally in Event From demo
   '&.hover, &.active': {
     color: '$green',
