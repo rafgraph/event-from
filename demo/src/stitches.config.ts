@@ -54,7 +54,6 @@ export const globalCss = createGlobalCss({
     boxSizing: 'inherit',
     font: 'inherit',
     fontWeight: 'inherit',
-    textDecoration: 'inherit',
     textAlign: 'inherit',
     lineHeight: 'inherit',
     wordBreak: 'inherit',
