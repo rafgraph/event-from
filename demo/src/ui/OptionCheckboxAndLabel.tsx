@@ -28,10 +28,6 @@ const OptionLabel = styled(createInteractive(Label.Root), {
     opacity: 0.5,
     cursor: 'unset',
   },
-  // required because of radix checkbox bug: https://github.com/radix-ui/primitives/issues/605
-  '&>input': {
-    display: 'none',
-  },
 });
 
 const OptionCheckbox = styled(createInteractive(Checkbox.Root), {
