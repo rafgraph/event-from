@@ -28,8 +28,8 @@ import { eventFrom } from 'event-from';
 const handleEvent = (event) => {
   // call eventFrom in the event handler and pass in the event
   // eventFrom will return 1 of 3 strings: 'mouse' | 'touch' | 'key'
-  const eventFromValue = eventFrom(event);
-  // ...your logic using the eventFromValue
+  const inputType = eventFrom(event);
+  // ...your logic using inputType
 };
 ```
 
